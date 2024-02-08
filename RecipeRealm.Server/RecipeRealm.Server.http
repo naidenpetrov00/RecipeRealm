@@ -1,0 +1,6 @@
+@RecipeRealm.Server_HostAddress = http://localhost:5072
+
+GET {{RecipeRealm.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
