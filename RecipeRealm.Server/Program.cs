@@ -12,11 +12,12 @@ namespace RecipeRealm.Server
 			var builder = WebApplication.CreateBuilder(args);
 			var connectionString = builder.Configuration.GetConnectionString("RecipeRealmServerContextConnection");
 
-			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
 
 			builder.Services
 				.AddIdentityApiEndpoints<RecipeRealmServerUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddEntityFrameworkStores<RecipeRealmServerContext>();
+
+			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
 
 			// Add services to the container.
 
@@ -41,10 +42,7 @@ namespace RecipeRealm.Server
 
 			app.UseAuthorization();
 
-
 			app.MapControllers();
-
-			app.MapIdentityApi<RecipeRealmServerUser>();
 
 			app.MapFallbackToFile("/index.html");
 

@@ -1,0 +1,21 @@
+version: '3.4'
+services:
+  reciperealm.server:
+    image: ${DOCKER_REGISTRY-}reciperealmserver
+    build:
+      context: .
+      dockerfile: RecipeRealm.Server/Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+
+  reciperealm.sql.database:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "adminPassword123!"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"

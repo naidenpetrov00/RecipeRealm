@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  recipe.realm.MSSQL:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+       ACCEPT_EULA: "Y"
+       SA_PASSWORD: "adminPassword@123"
+       MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+     - MSSQL-data:/var/opt/mssql
+     
+     
+volumes:
+  MSSQL-data: 
