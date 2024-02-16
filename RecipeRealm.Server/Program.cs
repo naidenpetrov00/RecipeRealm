@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using RecipeRealm.Server.Data;
-using RecipeRealm.Server.Models.Identity;
-
 namespace RecipeRealm.Server
 {
+	using GraphQL.Server.Ui.Voyager;
+	using Microsoft.EntityFrameworkCore;
+	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.Models.Identity;
+
 	public class Program
 	{
 		public static void Main(string[] args)
@@ -20,8 +20,10 @@ namespace RecipeRealm.Server
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
 
 			// Add services to the container.
+			builder.Services
+				.AddGraphQLServer()
+				.AddQueryType<Query>();
 
-			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
@@ -40,9 +42,13 @@ namespace RecipeRealm.Server
 
 			app.UseHttpsRedirection();
 
-			app.UseAuthorization();
+			//app.UseAuthorization();
 
-			app.MapControllers();
+			app.MapGraphQL();
+			app.UseGraphQLVoyager("/graphql-voyager", new VoyagerOptions
+			{
+				GraphQLEndPoint = "/graphql"
+			});
 
 			app.MapFallbackToFile("/index.html");
 
