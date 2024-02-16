@@ -25,8 +25,9 @@ const LoginPage = () => {
       <form className={styles.form} onSubmit={handleSubmit(loginHandler)}>
         <h1 className={styles.pageInfo}>Login</h1>
         <div className="form-outline mb-4">
-          {errors.email?.type === "required" && <p>{errors.email.message}</p>}
-          {errors.email?.type === "pattern" && <p>{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-danger">{errors.email.message}</p>
+          )}
           <input
             type="email"
             id="form2Example1"
@@ -42,7 +43,9 @@ const LoginPage = () => {
           </label>
         </div>
 
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && (
+          <p className="text-danger">{errors.password.message}</p>
+        )}
         <div className="form-outline mb-4">
           <input
             type="password"
@@ -50,6 +53,8 @@ const LoginPage = () => {
             className="form-control"
             {...register("password", {
               required: "This is required",
+              minLength: { value: 8, message: "Min length 8" },
+              maxLength: { value: 20, message: "Max length 20" },
             })}
             onBlur={() => trigger("password")}
           />

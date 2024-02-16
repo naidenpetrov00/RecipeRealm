@@ -24,10 +24,7 @@ const RegisterPage = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(registerHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
-      {errors.email?.type === "required" && <p>{errors.email.message}</p>}
-      {errors.email?.message === "Provide valid email" && (
-        <p>{errors.email.message}</p>
-      )}
+      {errors.email && <p className="text-danger">{errors.email.message}</p>}
       <div className="form-outline mb-4">
         <input
           type="email"
@@ -45,11 +42,8 @@ const RegisterPage = () => {
       </div>
 
       <div className="form-outline mb-4">
-        {errors.password?.type === "required" && (
-          <p>{errors.password.message}</p>
-        )}
-        {errors.password && errors.password?.type !== "required" && (
-          <p>{errors.password.message}</p>
+        {errors.password && (
+          <p className="text-danger">{errors.password.message}</p>
         )}
         <input
           {...register("password", {
@@ -69,11 +63,8 @@ const RegisterPage = () => {
       </div>
 
       <div className="form-outline mb-4">
-        {errors.confirmPassword?.type === "required" && (
-          <p>{errors.confirmPassword.message}</p>
-        )}
-        {errors.confirmPassword?.type === "validate" && (
-          <p>{errors.confirmPassword.message}</p>
+        {errors.confirmPassword && (
+          <p className="text-danger">{errors.confirmPassword.message}</p>
         )}
         <input
           {...register("confirmPassword", {
