@@ -1,21 +1,58 @@
 import { Fragment } from "react";
 
 import styles from "./LoginPage.module.css";
+import { FormSubmitHandler, SubmitHandler, useForm } from "react-hook-form";
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
+  const {
+    register,
+    trigger,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<FormValues>();
+
+  const loginHandler: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
   return (
     <Fragment>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit(loginHandler)}>
         <h1 className={styles.pageInfo}>Login</h1>
         <div className="form-outline mb-4">
-          <input type="email" id="form2Example1" className="form-control" />
+          {errors.email?.type === "required" && <p>{errors.email.message}</p>}
+          {errors.email?.type === "pattern" && <p>{errors.email.message}</p>}
+          <input
+            type="email"
+            id="form2Example1"
+            className="form-control"
+            {...register("email", {
+              required: "This is required",
+              pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
+            })}
+            onBlur={() => trigger("email")}
+          />
           <label className="form-label" htmlFor="form2Example1">
             Email address
           </label>
         </div>
 
+        {errors.password && <p>{errors.password.message}</p>}
         <div className="form-outline mb-4">
-          <input type="password" id="form2Example2" className="form-control" />
+          <input
+            type="password"
+            id="form2Example2"
+            className="form-control"
+            {...register("password", {
+              required: "This is required",
+            })}
+            onBlur={() => trigger("password")}
+          />
           <label className="form-label" htmlFor="form2Example2">
             Password
           </label>
@@ -41,7 +78,7 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <button type="button" className="btn btn-primary btn-block mb-4">
+        <button type="submit" className="btn btn-primary btn-block mb-4">
           Sign in
         </button>
 

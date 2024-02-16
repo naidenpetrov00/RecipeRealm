@@ -1,7 +1,6 @@
-import { ChangeEvent, Fragment, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import styles from "./LoginPage.module.css";
-import { SubmitHandler, useForm } from "react-hook-form";
 
 type FormValues = {
   email: string;
@@ -19,16 +18,14 @@ const RegisterPage = () => {
   } = useForm<FormValues>();
 
   const registerHandler: SubmitHandler<FormValues> = (data) => {
-    console.log(data.email);
+    console.log(data);
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(registerHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
-      {errors.email && errors.email.type === "required" && (
-        <p>{errors.email.message}</p>
-      )}
-      {errors.email && errors.email.message === "Provide valid email" && (
+      {errors.email?.type === "required" && <p>{errors.email.message}</p>}
+      {errors.email?.message === "Provide valid email" && (
         <p>{errors.email.message}</p>
       )}
       <div className="form-outline mb-4">
@@ -48,19 +45,17 @@ const RegisterPage = () => {
       </div>
 
       <div className="form-outline mb-4">
-        {errors.password && errors.password.type === "required" && (
+        {errors.password?.type === "required" && (
           <p>{errors.password.message}</p>
         )}
-        {errors.password && errors.password.type === "minLength" && (
+        {errors.password && errors.password?.type !== "required" && (
           <p>{errors.password.message}</p>
         )}
         <input
           {...register("password", {
             required: "This is reqiured",
-            minLength: {
-              value: 8,
-              message: "Min length 8",
-            },
+            minLength: { value: 8, message: "Min length 8" },
+            maxLength: { value: 20, message: "Max length 20" },
           })}
           onBlur={() => trigger("password")}
           type="password"
@@ -74,14 +69,12 @@ const RegisterPage = () => {
       </div>
 
       <div className="form-outline mb-4">
-        {errors.confirmPassword &&
-          errors.confirmPassword.type === "required" && (
-            <p>{errors.confirmPassword.message}</p>
-          )}
-        {errors.confirmPassword &&
-          errors.confirmPassword.type === "validate" && (
-            <p>{errors.confirmPassword.message}</p>
-          )}
+        {errors.confirmPassword?.type === "required" && (
+          <p>{errors.confirmPassword.message}</p>
+        )}
+        {errors.confirmPassword?.type === "validate" && (
+          <p>{errors.confirmPassword.message}</p>
+        )}
         <input
           {...register("confirmPassword", {
             required: "This is reqiured",
