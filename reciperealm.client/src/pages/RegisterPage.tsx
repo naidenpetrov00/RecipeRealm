@@ -1,8 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import styles from "./LoginPage.module.css";
+import { ChangeEvent } from "react";
 
 type FormValues = {
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -17,6 +19,15 @@ const RegisterPage = () => {
     watch,
   } = useForm<FormValues>();
 
+  let typingTimer: ReturnType<typeof setTimeout>;
+  const checkUsernameHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(checkUsername, 1000);
+  };
+  const checkUsername = () => {
+    
+  };
+
   const registerHandler: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
@@ -24,8 +35,29 @@ const RegisterPage = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(registerHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
-      {errors.email && <p className="text-danger">{errors.email.message}</p>}
+      {errors.username && (
+        <p className="text-danger">{errors.username.message}</p>
+      )}
       <div className="form-outline mb-4">
+        <input
+          type="username"
+          id="username"
+          className="form-control"
+          {...register("username", {
+            required: "This is reqiured",
+            minLength: { value: 8, message: "Min length 6" },
+            maxLength: { value: 20, message: "Max length 20" },
+          })}
+          onBlur={() => trigger("username")}
+          onChange={checkUsernameHandler}
+        />
+        <label className="form-label" htmlFor="email">
+          Username
+        </label>
+      </div>
+
+      <div className="form-outline mb-4">
+        {errors.email && <p className="text-danger">{errors.email.message}</p>}
         <input
           type="email"
           id="email"
