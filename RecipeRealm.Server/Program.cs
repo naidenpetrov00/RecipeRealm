@@ -1,9 +1,12 @@
 namespace RecipeRealm.Server
 {
-	using GraphQL.Server.Ui.Voyager;
-	using Microsoft.EntityFrameworkCore;
 	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.Models.Identity;
+	using RecipeRealm.Server.GraphQL.Queries;
+	using RecipeRealm.Server.GraphQL.Mutations;
+
+	using global::GraphQL.Server.Ui.Voyager;
+	using Microsoft.EntityFrameworkCore;
 
 	public class Program
 	{
@@ -14,7 +17,7 @@ namespace RecipeRealm.Server
 
 
 			builder.Services
-				.AddIdentityApiEndpoints<RecipeRealmServerUser>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddDefaultIdentity<RecipeRealmServerUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddEntityFrameworkStores<RecipeRealmServerContext>();
 
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
@@ -22,7 +25,10 @@ namespace RecipeRealm.Server
 			// Add services to the container.
 			builder.Services
 				.AddGraphQLServer()
-				.AddQueryType<Query>();
+				.RegisterDbContext<RecipeRealmServerContext>()
+				.AddQueryType<Query>()
+				.AddMutationType<Mutation>();
+
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
@@ -41,8 +47,8 @@ namespace RecipeRealm.Server
 			}
 
 			app.UseHttpsRedirection();
-
-			//app.UseAuthorization();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.MapGraphQL();
 			app.UseGraphQLVoyager("/graphql-voyager", new VoyagerOptions

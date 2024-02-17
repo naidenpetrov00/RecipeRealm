@@ -4,5 +4,6 @@
 
 	public class RecipeRealmServerUser : IdentityUser
 	{
+		public string Password { get; set; }
 	}
 }
