@@ -1,21 +1,16 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Mutations
 {
-	using Microsoft.AspNetCore.Identity;
-	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Models.Identity;
 
+	using Microsoft.AspNetCore.Identity;
+
 	public abstract class IdentityMutation
 	{
-		private readonly UserManager<RecipeRealmServerUser> userManager;
-
-		public IdentityMutation(UserManager<RecipeRealmServerUser> userManager)
-		{
-			this.userManager = userManager;
-		}
-
 		public async Task<RegisterUserPayload> RegisterUser(
-			RegisterUserInput input)
+			RegisterUserInput input,
+			[Service] UserManager<RecipeRealmServerUser> userManager,
+			[Service] SignInManager<RecipeRealmServerUser> signInManager)
 		{
 			var user = new RecipeRealmServerUser
 			{
@@ -23,10 +18,12 @@
 				Email = input.Email,
 			};
 
-			var result = await this.userManager.CreateAsync(user, input.Password);
+			var result = await userManager.CreateAsync(user, input.Password);
 
 			if (result.Succeeded)
 			{
+				await signInManager.SignInAsync(user, isPersistent: true);
+
 				return new RegisterUserPayload { User = user };
 			}
 
