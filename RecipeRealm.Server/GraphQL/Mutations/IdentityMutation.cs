@@ -7,6 +7,13 @@
 
 	public abstract class IdentityMutation
 	{
+		private readonly UserManager<RecipeRealmServerUser> userManager;
+
+		public IdentityMutation(UserManager<RecipeRealmServerUser> userManager)
+		{
+			this.userManager = userManager;
+		}
+
 		public async Task<RegisterUserPayload> RegisterUser(
 			RegisterUserInput input)
 		{
@@ -16,7 +23,14 @@
 				Email = input.Email,
 			};
 
-			return new RegisterUserPayload(user);
+			var result = await this.userManager.CreateAsync(user, input.Password);
+
+			if (result.Succeeded)
+			{
+				return new RegisterUserPayload { User = user };
+			}
+
+			return new RegisterUserPayload { Errors = result.Errors };
 		}
 	}
 }

@@ -7,6 +7,7 @@ namespace RecipeRealm.Server
 
 	using global::GraphQL.Server.Ui.Voyager;
 	using Microsoft.EntityFrameworkCore;
+	using Microsoft.AspNetCore.Identity;
 
 	public class Program
 	{
@@ -17,7 +18,12 @@ namespace RecipeRealm.Server
 
 
 			builder.Services
-				.AddDefaultIdentity<RecipeRealmServerUser>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddDefaultIdentity<RecipeRealmServerUser>(options =>
+				{
+					options.SignIn.RequireConfirmedAccount = true;
+					options.Password.RequiredLength = 8;
+					options.Password.RequireNonAlphanumeric = false;
+				})
 				.AddEntityFrameworkStores<RecipeRealmServerContext>();
 
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
@@ -29,6 +35,8 @@ namespace RecipeRealm.Server
 				.AddQueryType<Query>()
 				.AddMutationType<Mutation>();
 
+			builder.Services.AddScoped<UserManager<RecipeRealmServerUser>>();
+			builder.Services.AddScoped<SignInManager<RecipeRealmServerUser>>();
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
