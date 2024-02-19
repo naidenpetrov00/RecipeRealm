@@ -1,18 +1,20 @@
 namespace RecipeRealm.Server
 {
-	using RecipeRealm.Server.Data;
-	using RecipeRealm.Server.Models.Identity;
-	using RecipeRealm.Server.GraphQL.Queries;
-	using RecipeRealm.Server.GraphQL.Mutations;
+    using RecipeRealm.Server.Data;
+    using RecipeRealm.Server.Models.Identity;
+    using RecipeRealm.Server.GraphQL.Queries;
+    using RecipeRealm.Server.GraphQL.Mutations;
 
-	using global::GraphQL.Server.Ui.Voyager;
-	using Microsoft.EntityFrameworkCore;
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.AspNetCore.Authentication.JwtBearer;
-	using Microsoft.IdentityModel.Tokens;
-	using System.Text;
+    using global::GraphQL.Server.Ui.Voyager;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Text;
+    using RecipeRealm.Server.Services;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -59,6 +61,7 @@ namespace RecipeRealm.Server
 
 			builder.Services.AddScoped<UserManager<RecipeRealmServerUser>>();
 			builder.Services.AddScoped<SignInManager<RecipeRealmServerUser>>();
+			builder.Services.AddTransient<IJwtService, JwtService>();
 			builder.Services.AddHttpContextAccessor();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

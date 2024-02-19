@@ -4,6 +4,8 @@
 	using RecipeRealm.Server.Models.Identity;
 
 	using Microsoft.AspNetCore.Identity;
+	using Microsoft.IdentityModel.JsonWebTokens;
+	using RecipeRealm.Server.Services.Interfaces;
 
 	public abstract class IdentityMutation
 	{
@@ -11,7 +13,7 @@
 			RegisterUserInput input,
 			[Service] UserManager<RecipeRealmServerUser> userManager,
 			[Service] SignInManager<RecipeRealmServerUser> signInManager,
-			[Service] IHttpContextAccessor httpContextAccessor)
+			[Service] IJwtService jwtService)
 		{
 			var user = new RecipeRealmServerUser
 			{
@@ -23,9 +25,9 @@
 
 			if (result.Succeeded)
 			{
-				await signInManager.SignInAsync(user, isPersistent: true);
+				var jwtToken = jwtService.CreateToken(user);
 
-				return new RegisterUserPayload { User = user };
+				return new RegisterUserPayload { User = user, JwtToken = jwtToken };
 			}
 
 			return new RegisterUserPayload { Errors = result.Errors };

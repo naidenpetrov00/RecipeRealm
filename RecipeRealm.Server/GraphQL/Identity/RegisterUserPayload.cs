@@ -9,5 +9,7 @@
 	{
 		public IEnumerable<IdentityError>? Errors { get; set; } = null;
 		public RecipeRealmServerUser? User { get; set; } = null;
+
+		public string? JwtToken { get; set; } = null;
 	}
 }
