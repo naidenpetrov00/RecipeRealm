@@ -8,15 +8,37 @@ namespace RecipeRealm.Server
 	using global::GraphQL.Server.Ui.Voyager;
 	using Microsoft.EntityFrameworkCore;
 	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Authentication.JwtBearer;
+	using Microsoft.IdentityModel.Tokens;
+	using System.Text;
 
 	public class Program
 	{
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-			var connectionString = builder.Configuration.GetConnectionString("RecipeRealmServerContextConnection");
+			var configuration = builder.Configuration;
+			var connectionString = configuration.GetConnectionString("RecipeRealmServerContextConnection");
 
-
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(opt =>
+			{
+				opt.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidIssuer = configuration["JWT:ValidIssuer"],
+					ValidAudience = configuration["JWT:ValidAudience"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+				};
+			});
+			builder.Services.AddAuthorization();
 			builder.Services
 				.AddDefaultIdentity<RecipeRealmServerUser>(options =>
 				{
@@ -37,7 +59,7 @@ namespace RecipeRealm.Server
 
 			builder.Services.AddScoped<UserManager<RecipeRealmServerUser>>();
 			builder.Services.AddScoped<SignInManager<RecipeRealmServerUser>>();
-
+			builder.Services.AddHttpContextAccessor();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();

@@ -10,7 +10,8 @@
 		public async Task<RegisterUserPayload> RegisterUser(
 			RegisterUserInput input,
 			[Service] UserManager<RecipeRealmServerUser> userManager,
-			[Service] SignInManager<RecipeRealmServerUser> signInManager)
+			[Service] SignInManager<RecipeRealmServerUser> signInManager,
+			[Service] IHttpContextAccessor httpContextAccessor)
 		{
 			var user = new RecipeRealmServerUser
 			{
