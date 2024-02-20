@@ -1,12 +1,12 @@
 ﻿namespace RecipeRealm.Server.Services
 {
 	using RecipeRealm.Server.Models.Identity;
+	using RecipeRealm.Server.Services.Interfaces;
 
 	using Microsoft.IdentityModel.Tokens;
-	using System.Security.Claims;
 	using System.Text;
+	using System.Security.Claims;
 	using System.IdentityModel.Tokens.Jwt;
-	using RecipeRealm.Server.Services.Interfaces;
 
 	public class JwtService : IJwtService
 	{

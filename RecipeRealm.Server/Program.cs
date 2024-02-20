@@ -1,20 +1,21 @@
 namespace RecipeRealm.Server
 {
-    using RecipeRealm.Server.Data;
-    using RecipeRealm.Server.Models.Identity;
-    using RecipeRealm.Server.GraphQL.Queries;
-    using RecipeRealm.Server.GraphQL.Mutations;
+	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.Models.Identity;
+	using RecipeRealm.Server.GraphQL.Queries;
+	using RecipeRealm.Server.GraphQL.Mutations;
 
-    using global::GraphQL.Server.Ui.Voyager;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.IdentityModel.Tokens;
-    using System.Text;
-    using RecipeRealm.Server.Services;
-    using RecipeRealm.Server.Services.Interfaces;
+	using global::GraphQL.Server.Ui.Voyager;
+	using Microsoft.EntityFrameworkCore;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Authentication.JwtBearer;
+	using Microsoft.IdentityModel.Tokens;
+	using System.Text;
+	using RecipeRealm.Server.Services;
+	using RecipeRealm.Server.Services.Interfaces;
+	using System.IdentityModel.Tokens.Jwt;
 
-    public class Program
+	public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -44,6 +45,7 @@ namespace RecipeRealm.Server
 			builder.Services
 				.AddDefaultIdentity<RecipeRealmServerUser>(options =>
 				{
+					options.User.RequireUniqueEmail = true;
 					options.SignIn.RequireConfirmedAccount = true;
 					options.Password.RequiredLength = 8;
 					options.Password.RequireNonAlphanumeric = false;
@@ -59,6 +61,7 @@ namespace RecipeRealm.Server
 				.AddQueryType<Query>()
 				.AddMutationType<Mutation>();
 
+			builder.Services.AddTransient<JwtSecurityTokenHandler>();
 			builder.Services.AddScoped<UserManager<RecipeRealmServerUser>>();
 			builder.Services.AddScoped<SignInManager<RecipeRealmServerUser>>();
 			builder.Services.AddTransient<IJwtService, JwtService>();
