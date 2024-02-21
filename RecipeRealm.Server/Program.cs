@@ -23,6 +23,7 @@ namespace RecipeRealm.Server
 			var configuration = builder.Configuration;
 			var connectionString = configuration.GetConnectionString("RecipeRealmServerContextConnection");
 
+			builder.Services.AddCors();
 			builder.Services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -32,8 +33,8 @@ namespace RecipeRealm.Server
 			{
 				opt.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidIssuer = configuration["JWT:ValidIssuer"],
-					ValidAudience = configuration["JWT:ValidAudience"],
+					ValidIssuer = configuration.GetSection("JWT:ValidIssuer").Get<string>(),
+					ValidAudience = configuration.GetSection("JWT:ValidAudience").Get<string>(),
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
 					ValidateIssuer = true,
 					ValidateAudience = true,
@@ -82,6 +83,10 @@ namespace RecipeRealm.Server
 				app.UseSwaggerUI();
 			}
 
+			app.UseCors(o => o
+			 .AllowAnyHeader()
+			 .AllowAnyMethod()
+			 .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!));
 			app.UseHttpsRedirection();
 			app.UseAuthentication();
 			app.UseAuthorization();
