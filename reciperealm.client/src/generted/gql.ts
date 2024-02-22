@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "mutation RegisterUser($input: RegisterUserInput!) {\n  registerUser(input: $input) {\n    user {\n      userName\n      email\n    }\n    jwtToken\n    errors {\n      code\n      description\n    }\n  }\n}\n\nmutation LoginUser($input: LoginUserInput!) {\n  loginUser(userInput: $input) {\n    user {\n      userName\n      email\n    }\n    jwtToken\n    error {\n      code\n      description\n    }\n  }\n}": types.RegisterUserDocument,
-    "query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}": types.CheckUsernameAvailabilityDocument,
+    "query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}\n\nquery CheckEmailAvailability($email: String!) {\n  checkEmailAvailability(email: $email)\n}": types.CheckUsernameAvailabilityDocument,
 };
 
 /**
@@ -38,7 +38,7 @@ export function graphql(source: "mutation RegisterUser($input: RegisterUserInput
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}"): (typeof documents)["query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}"];
+export function graphql(source: "query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}\n\nquery CheckEmailAvailability($email: String!) {\n  checkEmailAvailability(email: $email)\n}"): (typeof documents)["query CheckUsernameAvailability($username: String!) {\n  checkUsernameAvailability(username: $username)\n}\n\nquery CheckEmailAvailability($email: String!) {\n  checkEmailAvailability(email: $email)\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

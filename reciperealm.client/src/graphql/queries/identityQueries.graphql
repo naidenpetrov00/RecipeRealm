@@ -1,3 +1,7 @@
 query CheckUsernameAvailability($username: String!) {
   checkUsernameAvailability(username: $username)
 }
+
+query CheckEmailAvailability($email: String!) {
+  checkEmailAvailability(email: $email)
+}

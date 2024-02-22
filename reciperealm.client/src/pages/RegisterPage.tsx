@@ -1,13 +1,12 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-
-import styles from "./LoginPage.module.css";
 import { ChangeEvent } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useLazyQuery } from "@apollo/client";
 import {
+  CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
-  CheckUsernameAvailabilityQueryVariables,
 } from "../generted/graphql";
 
+import styles from "./LoginPage.module.css";
 type FormValues = {
   username: string;
   email: string;
@@ -20,25 +19,37 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    trigger,
     watch,
   } = useForm<FormValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
-  const [checkUsernameQuery] = useLazyQuery(CheckUsernameAvailabilityDocument);
+  const [checkUsernameQuery, { data: usernameQueryData }] = useLazyQuery(
+    CheckUsernameAvailabilityDocument
+  );
+  const [checkEmailQuery, { data: emailQuerydata }] = useLazyQuery(
+    CheckEmailAvailabilityDocument
+  );
 
   let typingTimer: ReturnType<typeof setTimeout>;
-  const checkUsernameHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeTimeoutHandler = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     clearTimeout(typingTimer);
-    typingTimer = setTimeout(() => checkUsername(event.target.value), 1000);
-
-    const checkUsername: Function = async (username: string) => {
-      var { data } = await checkUsernameQuery({
-        variables: { username: username },
-      });
-      console.log(data?.checkUsernameAvailability);
-    };
+    typingTimer = setTimeout(async () => {
+      switch (event.target.name) {
+        case "username":
+          await checkUsernameQuery({
+            variables: { username: event.target.value },
+          });
+          break;
+        case "email":
+          await checkEmailQuery({
+            variables: { email: event.target.value },
+          });
+          break;
+      }
+    }, 1000);
   };
 
   const registerHandler: SubmitHandler<FormValues> = (data) => {
@@ -56,12 +67,18 @@ const RegisterPage = () => {
           type="username"
           id="username"
           className="form-control"
+          autoComplete="off"
           {...register("username", {
-            minLength: { value: 8, message: "Min length 6" },
+            minLength: { value: 6, message: "Min length 6" },
             maxLength: { value: 20, message: "Max length 20" },
             required: "This is reqiured",
+            validate: (): string | undefined => {
+              return usernameQueryData?.checkUsernameAvailability
+                ? undefined
+                : "Username is not available!";
+            },
           })}
-          onChange={checkUsernameHandler}
+          onChange={onChangeTimeoutHandler}
         />
         <label className="form-label" htmlFor="email">
           Username
@@ -74,10 +91,17 @@ const RegisterPage = () => {
           type="email"
           id="email"
           className="form-control"
+          autoComplete="off"
           {...register("email", {
             required: "This is reqiured",
             pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
+            validate: (): string | undefined => {
+              return emailQuerydata?.checkEmailAvailability
+                ? undefined
+                : "Account with this Email already exists";
+            },
           })}
+          onChange={onChangeTimeoutHandler}
         />
         <label className="form-label" htmlFor="email">
           Email address
@@ -89,12 +113,12 @@ const RegisterPage = () => {
           <p className="text-danger">{errors.password.message}</p>
         )}
         <input
+          defaultValue=""
           {...register("password", {
             required: "This is reqiured",
             minLength: { value: 8, message: "Min length 8" },
             maxLength: { value: 20, message: "Max length 20" },
           })}
-          onBlur={() => trigger("password")}
           type="password"
           name="password"
           id="password"
@@ -133,3 +157,6 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+function trigger() {
+  throw new Error("Function not implemented.");
+}

@@ -65,7 +65,12 @@ export type MutationRegisterUserArgs = {
 
 export type Query = {
   __typename?: "Query";
+  checkEmailAvailability: Scalars["Boolean"]["output"];
   checkUsernameAvailability: Scalars["Boolean"]["output"];
+};
+
+export type QueryCheckEmailAvailabilityArgs = {
+  email: Scalars["String"]["input"];
 };
 
 export type QueryCheckUsernameAvailabilityArgs = {
@@ -155,6 +160,15 @@ export type CheckUsernameAvailabilityQueryVariables = Exact<{
 export type CheckUsernameAvailabilityQuery = {
   __typename?: "Query";
   checkUsernameAvailability: boolean;
+};
+
+export type CheckEmailAvailabilityQueryVariables = Exact<{
+  email: Scalars["String"]["input"];
+}>;
+
+export type CheckEmailAvailabilityQuery = {
+  __typename?: "Query";
+  checkEmailAvailability: boolean;
 };
 
 export const RegisterUserDocument = {
@@ -365,4 +379,52 @@ export const CheckUsernameAvailabilityDocument = {
 } as unknown as DocumentNode<
   CheckUsernameAvailabilityQuery,
   CheckUsernameAvailabilityQueryVariables
+>;
+export const CheckEmailAvailabilityDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "CheckEmailAvailability" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "email" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "checkEmailAvailability" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "email" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "email" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CheckEmailAvailabilityQuery,
+  CheckEmailAvailabilityQueryVariables
 >;
