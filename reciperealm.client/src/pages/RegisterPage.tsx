@@ -2,6 +2,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import styles from "./LoginPage.module.css";
 import { ChangeEvent } from "react";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import {
+  CheckUsernameAvailabilityDocument,
+  CheckUsernameAvailabilityQueryVariables,
+} from "../generted/graphql";
 
 type FormValues = {
   username: string;
@@ -17,15 +22,23 @@ const RegisterPage = () => {
     formState: { errors },
     trigger,
     watch,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: "onBlur",
+    reValidateMode: "onBlur",
+  });
+  const [checkUsernameQuery] = useLazyQuery(CheckUsernameAvailabilityDocument);
 
   let typingTimer: ReturnType<typeof setTimeout>;
   const checkUsernameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(typingTimer);
-    typingTimer = setTimeout(checkUsername, 1000);
-  };
-  const checkUsername = () => {
-    
+    typingTimer = setTimeout(() => checkUsername(event.target.value), 1000);
+
+    const checkUsername: Function = async (username: string) => {
+      var { data } = await checkUsernameQuery({
+        variables: { username: username },
+      });
+      console.log(data?.checkUsernameAvailability);
+    };
   };
 
   const registerHandler: SubmitHandler<FormValues> = (data) => {
@@ -44,11 +57,10 @@ const RegisterPage = () => {
           id="username"
           className="form-control"
           {...register("username", {
-            required: "This is reqiured",
             minLength: { value: 8, message: "Min length 6" },
             maxLength: { value: 20, message: "Max length 20" },
+            required: "This is reqiured",
           })}
-          onBlur={() => trigger("username")}
           onChange={checkUsernameHandler}
         />
         <label className="form-label" htmlFor="email">
@@ -66,7 +78,6 @@ const RegisterPage = () => {
             required: "This is reqiured",
             pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
           })}
-          onBlur={() => trigger("email")}
         />
         <label className="form-label" htmlFor="email">
           Email address
@@ -104,7 +115,6 @@ const RegisterPage = () => {
             validate: (value: string) =>
               value === watch("password") || "Password must match",
           })}
-          onBlur={() => trigger("confirmPassword")}
           type="password"
           id="confirmPassword"
           name="confirmPassword"

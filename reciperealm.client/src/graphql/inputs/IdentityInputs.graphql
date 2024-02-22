@@ -1,0 +1,10 @@
+# type RegisterUserInput {
+#   username: String!
+#   email: String!
+#   password: String!
+# }
+
+# type LoginUserInput {
+#   email: String!
+#   password: String!
+# }

@@ -1,25 +1,3 @@
 query CheckUsernameAvailability($username: String!) {
   checkUsernameAvailability(username: $username)
 }
-
-mutation RegisterUser($input: ) {
-  registerUser(
-    input: {
-      username: "naidenpetrov1"
-      email: "naidenpetrov1@gmail.com"
-      password: "Naiden123"
-    }
-  ) {
-    user {
-      userName
-      email
-    }
-    jwtToken
-    errors {
-      code
-      description
-    }
-  }
-}
-
-type 

@@ -14,7 +14,10 @@ const LoginPage = () => {
     trigger,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: "onBlur",
+    reValidateMode: "onBlur",
+  });
 
   const loginHandler: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -36,7 +39,6 @@ const LoginPage = () => {
               required: "This is required",
               pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
             })}
-            onBlur={() => trigger("email")}
           />
           <label className="form-label" htmlFor="form2Example1">
             Email address
@@ -56,7 +58,6 @@ const LoginPage = () => {
               minLength: { value: 8, message: "Min length 8" },
               maxLength: { value: 20, message: "Max length 20" },
             })}
-            onBlur={() => trigger("password")}
           />
           <label className="form-label" htmlFor="form2Example2">
             Password

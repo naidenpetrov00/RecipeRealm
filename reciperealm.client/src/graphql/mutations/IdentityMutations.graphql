@@ -1,0 +1,27 @@
+mutation RegisterUser($input: RegisterUserInput!) {
+  registerUser(input: $input) {
+    user {
+      userName
+      email
+    }
+    jwtToken
+    errors {
+      code
+      description
+    }
+  }
+}
+
+mutation LoginUser($input: LoginUserInput!) {
+  loginUser(userInput: $input) {
+    user {
+      userName
+      email
+    }
+    jwtToken
+    error {
+      code
+      description
+    }
+  }
+}
