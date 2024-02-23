@@ -8,3 +8,11 @@
   text-align: center;
   padding: 10px;
 }
+
+.input {
+  max-width: 900px;
+}
+
+.button {
+  max-width: 900px;
+}

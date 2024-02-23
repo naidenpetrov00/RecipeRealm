@@ -20,6 +20,7 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    trigger,
   } = useForm<FormValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -31,25 +32,17 @@ const RegisterPage = () => {
     CheckEmailAvailabilityDocument
   );
 
-  let typingTimer: ReturnType<typeof setTimeout>;
-  const onChangeTimeoutHandler = async (
+  const onChangeUsernameHandler = async (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(async () => {
-      switch (event.target.name) {
-        case "username":
-          await checkUsernameQuery({
-            variables: { username: event.target.value },
-          });
-          break;
-        case "email":
-          await checkEmailQuery({
-            variables: { email: event.target.value },
-          });
-          break;
-      }
-    }, 1000);
+    await checkUsernameQuery({
+      variables: { username: event.target.value },
+    });
+  };
+  const onChangeEmailHandler = async (event: ChangeEvent<HTMLInputElement>) => {
+    await checkEmailQuery({
+      variables: { email: event.target.value },
+    });
   };
 
   const registerHandler: SubmitHandler<FormValues> = (data) => {
@@ -66,7 +59,7 @@ const RegisterPage = () => {
         <input
           type="username"
           id="username"
-          className="form-control"
+          className={"form-control " + styles.input}
           autoComplete="off"
           {...register("username", {
             minLength: { value: 6, message: "Min length 6" },
@@ -78,7 +71,7 @@ const RegisterPage = () => {
                 : "Username is not available!";
             },
           })}
-          onChange={onChangeTimeoutHandler}
+          onChange={onChangeUsernameHandler}
         />
         <label className="form-label" htmlFor="email">
           Username
@@ -90,7 +83,7 @@ const RegisterPage = () => {
         <input
           type="email"
           id="email"
-          className="form-control"
+          className={"form-control " + styles.input}
           autoComplete="off"
           {...register("email", {
             required: "This is reqiured",
@@ -101,7 +94,7 @@ const RegisterPage = () => {
                 : "Account with this Email already exists";
             },
           })}
-          onChange={onChangeTimeoutHandler}
+          onChange={onChangeEmailHandler}
         />
         <label className="form-label" htmlFor="email">
           Email address
@@ -122,7 +115,7 @@ const RegisterPage = () => {
           type="password"
           name="password"
           id="password"
-          className="form-control"
+          className={"form-control " + styles.input}
         />
         <label className="form-label" htmlFor="password">
           Password
@@ -142,14 +135,17 @@ const RegisterPage = () => {
           type="password"
           id="confirmPassword"
           name="confirmPassword"
-          className="form-control"
+          className={"form-control " + styles.input}
         />
         <label className="form-label" htmlFor="confirmPassword">
           Confirm Password
         </label>
       </div>
 
-      <button type="submit" className="btn btn-primary btn-block mb-4">
+      <button
+        type="submit"
+        className={"btn btn-primary btn-block mb-4 " + styles.button}
+      >
         Register
       </button>
     </form>
@@ -157,6 +153,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-function trigger() {
-  throw new Error("Function not implemented.");
-}
