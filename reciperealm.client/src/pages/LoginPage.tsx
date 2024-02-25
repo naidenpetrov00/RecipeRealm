@@ -1,7 +1,10 @@
 import { Fragment } from "react";
 
 import styles from "./LoginPage.module.css";
-import { FormSubmitHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { LoginUserDocument } from "../generted/graphql";
+import { ActionFunction, Form, redirect, useNavigate } from "react-router-dom";
 
 type FormValues = {
   email: string;
@@ -9,9 +12,9 @@ type FormValues = {
 };
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const {
     register,
-    trigger,
     formState: { errors },
     handleSubmit,
   } = useForm<FormValues>({
@@ -19,15 +22,15 @@ const LoginPage = () => {
     reValidateMode: "onBlur",
   });
 
-  const loginHandler: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-  };
+  const [loginQuery] = useMutation(LoginUserDocument);
+
+  const loginHandler: SubmitHandler<FormValues> = async (data) => {};
 
   return (
     <Fragment>
-      <form className={styles.form} onSubmit={handleSubmit(loginHandler)}>
+      <Form className={styles.form} onSubmit={handleSubmit(loginHandler)}>
         <h1 className={styles.pageInfo}>Login</h1>
-        <div className="form-outline mb-4">
+        <div className={"form-outline mb-4 " + styles.outline}>
           {errors.email && (
             <p className="text-danger">{errors.email.message}</p>
           )}
@@ -45,10 +48,10 @@ const LoginPage = () => {
           </label>
         </div>
 
-        {errors.password && (
-          <p className="text-danger">{errors.password.message}</p>
-        )}
-        <div className="form-outline mb-4">
+        <div className={"form-outline mb-4 " + styles.outline}>
+          {errors.password && (
+            <p className="text-danger">{errors.password.message}</p>
+          )}
           <input
             type="password"
             id="form2Example2"
@@ -84,7 +87,10 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary btn-block mb-4">
+        <button
+          type="submit"
+          className={"btn btn-primary btn-block mb-4 " + styles.button}
+        >
           Sign in
         </button>
 
@@ -109,9 +115,26 @@ const LoginPage = () => {
             <i className="fab fa-github"></i>
           </button>
         </div>
-      </form>
+      </Form>
     </Fragment>
   );
 };
 
 export default LoginPage;
+
+export const loginAction: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const { email, password } = Object.fromEntries(formData);
+  const [loginQuery] = useMutation(LoginUserDocument);
+  const result = await loginQuery({
+    variables: {
+      input: {
+        email: email.toString(),
+        password: password.toString(),
+      },
+    },
+  });
+
+  console.log(result);
+  return redirect("/");
+};

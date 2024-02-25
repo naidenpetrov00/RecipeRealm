@@ -9,10 +9,23 @@
   padding: 10px;
 }
 
-.input {
+.outline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: 900px;
+  margin: 0 auto;
+}
+
+.outline label {
+  align-self: flex-start;
+}
+.outline p{
+  align-self: start;
 }
 
 .button {
   max-width: 900px;
+  margin: 0 auto;
+
 }

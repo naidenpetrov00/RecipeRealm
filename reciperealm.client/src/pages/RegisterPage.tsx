@@ -1,12 +1,15 @@
 import { ChangeEvent } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
+
 import {
   CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
+  RegisterUserDocument,
 } from "../generted/graphql";
 
 import styles from "./LoginPage.module.css";
+
 type FormValues = {
   username: string;
   email: string;
@@ -20,7 +23,6 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
-    trigger,
   } = useForm<FormValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
@@ -31,6 +33,7 @@ const RegisterPage = () => {
   const [checkEmailQuery, { data: emailQuerydata }] = useLazyQuery(
     CheckEmailAvailabilityDocument
   );
+  const [registerMutation] = useMutation(RegisterUserDocument);
 
   const onChangeUsernameHandler = async (
     event: ChangeEvent<HTMLInputElement>
@@ -45,17 +48,32 @@ const RegisterPage = () => {
     });
   };
 
-  const registerHandler: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const registerHandler: SubmitHandler<FormValues> = async (data) => {
+    const result = await registerMutation({
+      variables: {
+        input: {
+          email: data.email,
+          username: data.email,
+          password: data.password,
+        },
+      },
+    });
+
+    if (result.data?.registerUser.errors) {
+      for (const error of result.data?.registerUser.errors) {
+        alert(`${error.code}: ${error.description}`);
+      }
+    }
+    console.log(result.data);
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(registerHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
-      {errors.username && (
-        <p className="text-danger">{errors.username.message}</p>
-      )}
-      <div className="form-outline mb-4">
+      <div className={"form-outline mb-4 " + styles.outline}>
+        {errors.username && (
+          <p className="text-danger">{errors.username.message}</p>
+        )}
         <input
           type="username"
           id="username"
@@ -78,7 +96,7 @@ const RegisterPage = () => {
         </label>
       </div>
 
-      <div className="form-outline mb-4">
+      <div className={"form-outline mb-4 " + styles.outline}>
         {errors.email && <p className="text-danger">{errors.email.message}</p>}
         <input
           type="email"
@@ -101,7 +119,7 @@ const RegisterPage = () => {
         </label>
       </div>
 
-      <div className="form-outline mb-4">
+      <div className={"form-outline mb-4 " + styles.outline}>
         {errors.password && (
           <p className="text-danger">{errors.password.message}</p>
         )}
@@ -111,6 +129,11 @@ const RegisterPage = () => {
             required: "This is reqiured",
             minLength: { value: 8, message: "Min length 8" },
             maxLength: { value: 20, message: "Max length 20" },
+            pattern: {
+              value: /(?=.*[A-Z])(?=.*\d).+/,
+              message:
+                "Passport must contain at least one uppercase letter and one number",
+            },
           })}
           type="password"
           name="password"
@@ -122,7 +145,7 @@ const RegisterPage = () => {
         </label>
       </div>
 
-      <div className="form-outline mb-4">
+      <div className={"form-outline mb-4 " + styles.outline}>
         {errors.confirmPassword && (
           <p className="text-danger">{errors.confirmPassword.message}</p>
         )}

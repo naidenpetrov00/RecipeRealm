@@ -2,12 +2,10 @@
 {
 	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Models.Identity;
+	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Exceptions.Identity;
 
 	using Microsoft.AspNetCore.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.Services;
-	using RecipeRealm.Server.Exceptions.Identity;
-	using Microsoft.IdentityModel.JsonWebTokens;
 
 	public abstract class IdentityMutation
 	{
@@ -35,9 +33,9 @@
 		}
 
 		public async Task<LoginUserPayload> LoginUser(
-			LoginUserInput userInput,
-			[Service] UserManager<RecipeRealmServerUser> userManager,
-			[Service] IJwtService jwtService)
+		LoginUserInput userInput,
+		[Service] UserManager<RecipeRealmServerUser> userManager,
+		[Service] IJwtService jwtService)
 		{
 			var user = await userManager.FindByEmailAsync(userInput.Email);
 			if (user == null)
