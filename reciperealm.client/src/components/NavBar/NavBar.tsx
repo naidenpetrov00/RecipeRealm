@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Form, Link, NavLink } from "react-router-dom";
 import SearchForm from "./SearchForm";
 
 const NavBar = () => {
@@ -28,13 +28,18 @@ const NavBar = () => {
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/login">
-              Sign in
+              Sign In
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/register">
               Register
             </NavLink>
+          </li>
+          <li className="nav-item">
+            <Form method="post" action="/logout">
+              <button className="btn">Sign Out</button>
+            </Form>
           </li>
         </ul>
         <SearchForm />

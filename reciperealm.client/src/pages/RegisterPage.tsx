@@ -8,15 +8,10 @@ import {
   CheckUsernameAvailabilityDocument,
   RegisterUserDocument,
 } from "../generted/graphql";
+import { IUserLoginValues, IUserRegisterValues } from "../interfaces/identity";
 
 import styles from "./LoginPage.module.css";
-
-export type FormValues = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const RegisterPage = () => {
   const {
@@ -24,7 +19,7 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<FormValues>({
+  } = useForm<IUserRegisterValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
@@ -48,9 +43,10 @@ const RegisterPage = () => {
     });
   };
 
+  const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
   const [registerMutation] = useMutation(RegisterUserDocument);
-  const registerHandler: SubmitHandler<FormValues> = async (data) => {
+  const registerHandler: SubmitHandler<IUserRegisterValues> = async (data) => {
     const result = await registerMutation({
       variables: {
         input: {
@@ -61,14 +57,23 @@ const RegisterPage = () => {
       },
     });
 
-    if (result.data?.registerUser.errors) {
+    if (result.data?.registerUser.jwtToken) {
+      signIn({
+        auth: {
+          token: result.data?.registerUser.jwtToken,
+          type: "Bearer",
+        },
+        userState: {
+          email: data.email,
+          password: data.password,
+        },
+      });
+      navigate("/");
+    } else if (result.data?.registerUser.errors) {
       for (const error of result.data?.registerUser.errors) {
         alert(`${error.code}: ${error.description}`);
       }
     }
-    console.log(result.data);
-
-    navigate("/");
   };
 
   return (

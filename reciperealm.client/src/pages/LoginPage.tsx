@@ -6,25 +6,21 @@ import { useMutation } from "@apollo/client";
 import { LoginUserDocument } from "../generted/graphql";
 
 import styles from "./LoginPage.module.css";
-
-type FormValues = {
-  email: string;
-  password: string;
-};
+import { IUserLoginValues } from "../interfaces/identity";
 
 const LoginPage = () => {
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormValues>({
+  } = useForm<IUserLoginValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
 
   const navigate = useNavigate();
   const [loginQuery] = useMutation(LoginUserDocument);
-  const loginHandler: SubmitHandler<FormValues> = async (data) => {
+  const loginHandler: SubmitHandler<IUserLoginValues> = async (data) => {
     const result = await loginQuery({
       variables: {
         input: {
@@ -34,6 +30,7 @@ const LoginPage = () => {
       },
     });
 
+    console.log(result);
     navigate("/");
   };
 

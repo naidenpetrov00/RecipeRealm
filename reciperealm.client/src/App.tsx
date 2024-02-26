@@ -1,14 +1,16 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import { IUserLoginValues } from "./interfaces/identity";
 import RootLayout from "./pages/RootLayout";
 import HomePage from "./pages/HomePage";
 import ErrorPage from "./pages/ErrorPage";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage, { FormValues } from "./pages/RegisterPage";
+import RegisterPage from "./pages/RegisterPage";
 import createStore from "react-auth-kit/createStore";
 import AuthProvider from "react-auth-kit/AuthProvider";
+import { logoutAction } from "./pages/Logout";
 
-const store = createStore<FormValues>({
+const store = createStore<IUserLoginValues>({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
@@ -24,6 +26,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
+      { path: "logout", action: logoutAction },
     ],
   },
 ]);
