@@ -1,10 +1,11 @@
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useMutation } from "@apollo/client";
+
+import { LoginUserDocument } from "../generted/graphql";
 
 import styles from "./LoginPage.module.css";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { LoginUserDocument } from "../generted/graphql";
-import { ActionFunction, Form, redirect, useNavigate } from "react-router-dom";
 
 type FormValues = {
   email: string;
@@ -12,7 +13,6 @@ type FormValues = {
 };
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
@@ -22,13 +22,28 @@ const LoginPage = () => {
     reValidateMode: "onBlur",
   });
 
+  const navigate = useNavigate();
   const [loginQuery] = useMutation(LoginUserDocument);
+  const loginHandler: SubmitHandler<FormValues> = async (data) => {
+    const result = await loginQuery({
+      variables: {
+        input: {
+          email: data.email,
+          password: data.password,
+        },
+      },
+    });
 
-  const loginHandler: SubmitHandler<FormValues> = async (data) => {};
+    navigate("/");
+  };
 
   return (
     <Fragment>
-      <Form className={styles.form} onSubmit={handleSubmit(loginHandler)}>
+      <form
+        method="POST"
+        className={styles.form}
+        onSubmit={handleSubmit(loginHandler)}
+      >
         <h1 className={styles.pageInfo}>Login</h1>
         <div className={"form-outline mb-4 " + styles.outline}>
           {errors.email && (
@@ -115,26 +130,9 @@ const LoginPage = () => {
             <i className="fab fa-github"></i>
           </button>
         </div>
-      </Form>
+      </form>
     </Fragment>
   );
 };
 
 export default LoginPage;
-
-export const loginAction: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const { email, password } = Object.fromEntries(formData);
-  const [loginQuery] = useMutation(LoginUserDocument);
-  const result = await loginQuery({
-    variables: {
-      input: {
-        email: email.toString(),
-        password: password.toString(),
-      },
-    },
-  });
-
-  console.log(result);
-  return redirect("/");
-};

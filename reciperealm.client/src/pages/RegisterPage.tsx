@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLazyQuery, useMutation } from "@apollo/client";
 
@@ -10,7 +11,7 @@ import {
 
 import styles from "./LoginPage.module.css";
 
-type FormValues = {
+export type FormValues = {
   username: string;
   email: string;
   password: string;
@@ -27,14 +28,13 @@ const RegisterPage = () => {
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
-  const [checkUsernameQuery, { data: usernameQueryData }] = useLazyQuery(
-    CheckUsernameAvailabilityDocument
-  );
+
   const [checkEmailQuery, { data: emailQuerydata }] = useLazyQuery(
     CheckEmailAvailabilityDocument
   );
-  const [registerMutation] = useMutation(RegisterUserDocument);
-
+  const [checkUsernameQuery, { data: usernameQueryData }] = useLazyQuery(
+    CheckUsernameAvailabilityDocument
+  );
   const onChangeUsernameHandler = async (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -48,6 +48,8 @@ const RegisterPage = () => {
     });
   };
 
+  const navigate = useNavigate();
+  const [registerMutation] = useMutation(RegisterUserDocument);
   const registerHandler: SubmitHandler<FormValues> = async (data) => {
     const result = await registerMutation({
       variables: {
@@ -65,6 +67,8 @@ const RegisterPage = () => {
       }
     }
     console.log(result.data);
+
+    navigate("/");
   };
 
   return (
