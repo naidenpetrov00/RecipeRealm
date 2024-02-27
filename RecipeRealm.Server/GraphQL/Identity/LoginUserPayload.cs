@@ -6,8 +6,10 @@
 
 	public record LoginUserPayload
 	{
-		public IdentityError? Error { get; set; } = null;
 		public RecipeRealmServerUser? User { get; set; } = null;
+
 		public string? JwtToken { get; set; } = null;
+
+		public IdentityError? Error { get; set; } = null;
 	}
 }
