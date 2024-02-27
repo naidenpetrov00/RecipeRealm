@@ -31,7 +31,7 @@ export type LoginUserInput = {
 
 export type LoginUserPayload = {
   __typename?: 'LoginUserPayload';
-  error?: Maybe<IdentityError>;
+  error?: Maybe<UserNotFoundException>;
   jwtToken?: Maybe<Scalars['String']['output']>;
   user?: Maybe<RecipeRealmServerUser>;
 };
@@ -100,6 +100,12 @@ export type RegisterUserPayload = {
   user?: Maybe<RecipeRealmServerUser>;
 };
 
+export type UserNotFoundException = {
+  __typename?: 'UserNotFoundException';
+  code: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+};
+
 export type RegisterUserMutationVariables = Exact<{
   input: RegisterUserInput;
 }>;
@@ -112,7 +118,7 @@ export type LoginUserMutationVariables = Exact<{
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'LoginUserPayload', jwtToken?: string | null, user?: { __typename?: 'RecipeRealmServerUser', userName?: string | null, email?: string | null } | null, error?: { __typename?: 'IdentityError', code: string, description: string } | null } };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'LoginUserPayload', jwtToken?: string | null, user?: { __typename?: 'RecipeRealmServerUser', userName?: string | null, email?: string | null } | null, error?: { __typename?: 'UserNotFoundException', code: string, description: string } | null } };
 
 export type CheckUsernameAvailabilityQueryVariables = Exact<{
   username: Scalars['String']['input'];

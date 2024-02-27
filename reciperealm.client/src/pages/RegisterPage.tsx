@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLazyQuery, useMutation } from "@apollo/client";
 
-import {
+import {    
   CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
   RegisterUserDocument,
 } from "../generted/graphql";
-import { IUserLoginValues, IUserRegisterValues } from "../interfaces/identity";
+import {
+  IUserLoginValues,
+  IUserRegisterValues,
+} from "../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
@@ -64,6 +67,7 @@ const RegisterPage = () => {
           type: "Bearer",
         },
         userState: {
+          username: data.username,
           email: data.email,
           password: data.password,
         },

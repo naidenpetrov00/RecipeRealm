@@ -1,12 +1,14 @@
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 
 import { LoginUserDocument } from "../generted/graphql";
+import { IUserLoginValues } from "../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
-import { IUserLoginValues } from "../interfaces/identity";
+import { useLoginUser } from "../customHooks/identity";
 
 const LoginPage = () => {
   const {
@@ -17,21 +19,9 @@ const LoginPage = () => {
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
-
-  const navigate = useNavigate();
-  const [loginQuery] = useMutation(LoginUserDocument);
-  const loginHandler: SubmitHandler<IUserLoginValues> = async (data) => {
-    const result = await loginQuery({
-      variables: {
-        input: {
-          email: data.email,
-          password: data.password,
-        },
-      },
-    });
-
-    console.log(result);
-    navigate("/");
+  const { loginHandler } = useLoginUser();
+  const onSubmit: SubmitHandler<IUserLoginValues> = (data) => {
+    loginHandler(data.email, data.password);
   };
 
   return (
@@ -39,7 +29,7 @@ const LoginPage = () => {
       <form
         method="POST"
         className={styles.form}
-        onSubmit={handleSubmit(loginHandler)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <h1 className={styles.pageInfo}>Login</h1>
         <div className={"form-outline mb-4 " + styles.outline}>

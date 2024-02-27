@@ -1,5 +1,7 @@
-import { Form, Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 import SearchForm from "./SearchForm";
+import LogoutButon from "./LogoutButton";
 
 const NavBar = () => {
   return (
@@ -37,9 +39,7 @@ const NavBar = () => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <Form method="post" action="/logout">
-              <button className="btn">Sign Out</button>
-            </Form>
+            <LogoutButon />
           </li>
         </ul>
         <SearchForm />
