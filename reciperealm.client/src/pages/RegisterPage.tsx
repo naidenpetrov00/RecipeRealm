@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLazyQuery, useMutation } from "@apollo/client";
 
-import {    
+import {
   CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
   RegisterUserDocument,
@@ -15,6 +15,7 @@ import {
 
 import styles from "./LoginPage.module.css";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { useRegisterUser } from "../customHooks/identity";
 
 const RegisterPage = () => {
   const {
@@ -46,42 +47,13 @@ const RegisterPage = () => {
     });
   };
 
-  const signIn = useSignIn<IUserLoginValues>();
-  const navigate = useNavigate();
-  const [registerMutation] = useMutation(RegisterUserDocument);
-  const registerHandler: SubmitHandler<IUserRegisterValues> = async (data) => {
-    const result = await registerMutation({
-      variables: {
-        input: {
-          email: data.email,
-          username: data.email,
-          password: data.password,
-        },
-      },
-    });
-
-    if (result.data?.registerUser.jwtToken) {
-      signIn({
-        auth: {
-          token: result.data?.registerUser.jwtToken,
-          type: "Bearer",
-        },
-        userState: {
-          username: data.username,
-          email: data.email,
-          password: data.password,
-        },
-      });
-      navigate("/");
-    } else if (result.data?.registerUser.errors) {
-      for (const error of result.data?.registerUser.errors) {
-        alert(`${error.code}: ${error.description}`);
-      }
-    }
+  const { registerHandler } = useRegisterUser();
+  const onSubmitHandler: SubmitHandler<IUserRegisterValues> = async (data) => {
+    registerHandler(data.username, data.email, data.password);
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(registerHandler)}>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
       <div className={"form-outline mb-4 " + styles.outline}>
         {errors.username && (

@@ -8,13 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import createStore from "react-auth-kit/createStore";
 import AuthProvider from "react-auth-kit/AuthProvider";
-
-const store = createStore<IUserLoginValues>({
-  authName: "_auth",
-  authType: "cookie",
-  cookieDomain: window.location.hostname,
-  cookieSecure: window.location.protocol === "https:",
-});
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 const router = createBrowserRouter([
   {
@@ -30,11 +24,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return (
-    <AuthProvider store={store}>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

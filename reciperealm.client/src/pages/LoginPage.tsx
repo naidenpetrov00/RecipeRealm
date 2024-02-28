@@ -9,6 +9,9 @@ import { IUserLoginValues } from "../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
 import { useLoginUser } from "../customHooks/identity";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import { useDispatch, useSelector } from "react-redux";
+import { authenticated } from "../store/authSlice";
 
 const LoginPage = () => {
   const {
@@ -19,9 +22,11 @@ const LoginPage = () => {
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
+
   const { loginHandler } = useLoginUser();
-  const onSubmit: SubmitHandler<IUserLoginValues> = (data) => {
-    loginHandler(data.email, data.password);
+  const auth = useIsAuthenticated();
+  const onSubmitHandler: SubmitHandler<IUserLoginValues> = async (data) => {
+    await loginHandler(data.email, data.password);
   };
 
   return (
@@ -29,7 +34,7 @@ const LoginPage = () => {
       <form
         method="POST"
         className={styles.form}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmitHandler)}
       >
         <h1 className={styles.pageInfo}>Login</h1>
         <div className={"form-outline mb-4 " + styles.outline}>
