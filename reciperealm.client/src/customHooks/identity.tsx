@@ -1,10 +1,16 @@
 import { useMutation } from "@apollo/client";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+
+import { AppDispatch, RootState } from "../store/store";
 import { IUserLoginValues } from "../abstractions/identity";
 import { LoginUserDocument, RegisterUserDocument } from "../generted/graphql";
-import { useDispatch } from "react-redux";
 import { authenticated } from "../store/authSlice";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+
+export const useAppSelector = useSelector.withTypes<RootState>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 
 interface LoginHandlerResult {
   loginHandler: (email: string, password: string) => Promise<void>;
@@ -13,7 +19,8 @@ export const useLoginUser = (): LoginHandlerResult => {
   const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
   const [loginQuery] = useMutation(LoginUserDocument);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const isAuthenticatedCookie = useIsAuthenticated();
 
   const loginHandler = async (email: string, password: string) => {
     const result = await loginQuery({
@@ -37,7 +44,7 @@ export const useLoginUser = (): LoginHandlerResult => {
           password,
         },
       });
-      dispatch(authenticated());
+      dispatch(authenticated(isAuthenticatedCookie()));
       navigate("/");
     } else if (result.data?.loginUser.error) {
       const error = result.data?.loginUser.error;
@@ -59,6 +66,8 @@ export const useRegisterUser = (): RegisterHandlerResult => {
   const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
   const [registerMutation] = useMutation(RegisterUserDocument);
+  const dispatch = useAppDispatch();
+  const isAuthenticatedCookie = useIsAuthenticated();
 
   const registerHandler = async (
     username: string,
@@ -87,6 +96,7 @@ export const useRegisterUser = (): RegisterHandlerResult => {
           password,
         },
       });
+      dispatch(authenticated(isAuthenticatedCookie()));
       navigate("/");
     } else if (result.data?.registerUser.errors) {
       for (const error of result.data?.registerUser.errors) {

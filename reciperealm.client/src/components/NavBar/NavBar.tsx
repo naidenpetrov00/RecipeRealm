@@ -1,14 +1,12 @@
+import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
 import SearchForm from "./SearchForm";
 import LogoutButon from "./LogoutButton";
-import { Fragment, useEffect, useState } from "react";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../customHooks/identity";
 
 const NavBar = () => {
-  const isAuthenticated = useSelector((state) => state.auth.value);
-  console.log(isAuthenticated);
+  const isAuthenticated = useAppSelector((state) => state.auth.value);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,9 +33,16 @@ const NavBar = () => {
             </NavLink>
           </li>
           {isAuthenticated ? (
-            <li className="nav-item">
-              <LogoutButon />
-            </li>
+            <Fragment>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/myrecipes">
+                  My Recipes
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <LogoutButon />
+              </li>
+            </Fragment>
           ) : (
             <Fragment>
               <li className="nav-item">

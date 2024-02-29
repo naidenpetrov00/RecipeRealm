@@ -1,14 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { IUserLoginValues } from "./abstractions/identity";
 import RootLayout from "./pages/RootLayout";
-import HomePage from "./pages/HomePage";
 import ErrorPage from "./pages/ErrorPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import createStore from "react-auth-kit/createStore";
-import AuthProvider from "react-auth-kit/AuthProvider";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import HomePage from "./pages/HomePage";
+import MyRecipes from "./pages/MyRecipes";
+import LoginPage from "./pages/identity/LoginPage";
+import RegisterPage from "./pages/identity/RegisterPage";
+import RequireAuth from "@auth-kit/react-router/RequireAuth";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +15,14 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
+      {
+        path: "myrecipes",
+        element: (
+          <RequireAuth fallbackPath="/login">
+            <MyRecipes />
+          </RequireAuth>
+        ),
+      },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
     ],

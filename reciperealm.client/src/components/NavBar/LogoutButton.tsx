@@ -1,16 +1,20 @@
-import useSignOut from "react-auth-kit/hooks/useSignOut";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { nonAuthenticated } from "../../store/authSlice";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+
+import { useAppDispatch } from "../../customHooks/identity";
+import { authenticated } from "../../store/authSlice";
 
 const LogoutButon = () => {
   const navigation = useNavigate();
   const signOut = useSignOut();
-  const dispatch = useDispatch();
+  const isAuthCookie = useIsAuthenticated();
+  const dispatch = useAppDispatch();
+
   const logoutButtonHandler = () => {
     signOut();
+    dispatch(authenticated(isAuthCookie()));
     navigation("/");
-    dispatch(nonAuthenticated());
   };
 
   return (

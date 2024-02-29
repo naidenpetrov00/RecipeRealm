@@ -1,18 +1,13 @@
 import React from "react";
+import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
-
-import App from "./App.tsx";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+import App from "./App.tsx";
+import { store as reduxStore } from "./store/store.ts";
 import { IUserLoginValues } from "./abstractions/identity.tsx";
-import { Provider } from "react-redux";
-import reduxStore from "./store/store.ts";
 
 const client = new ApolloClient({
   uri: "http://localhost:5072/graphql",

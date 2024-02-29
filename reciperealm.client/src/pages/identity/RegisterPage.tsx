@@ -1,21 +1,15 @@
 import { ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 
 import {
   CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
-  RegisterUserDocument,
-} from "../generted/graphql";
-import {
-  IUserLoginValues,
-  IUserRegisterValues,
-} from "../abstractions/identity";
+} from "../../generted/graphql";
+import { useRegisterUser } from "../../customHooks/identity";
+import { IUserRegisterValues } from "../../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useRegisterUser } from "../customHooks/identity";
 
 const RegisterPage = () => {
   const {

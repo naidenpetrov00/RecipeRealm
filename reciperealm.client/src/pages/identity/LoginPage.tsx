@@ -1,17 +1,10 @@
 import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@apollo/client";
 
-import { LoginUserDocument } from "../generted/graphql";
-import { IUserLoginValues } from "../abstractions/identity";
+import { useLoginUser } from "../../customHooks/identity";
+import { IUserLoginValues } from "../../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
-import { useLoginUser } from "../customHooks/identity";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import { useDispatch, useSelector } from "react-redux";
-import { authenticated } from "../store/authSlice";
 
 const LoginPage = () => {
   const {
@@ -24,7 +17,6 @@ const LoginPage = () => {
   });
 
   const { loginHandler } = useLoginUser();
-  const auth = useIsAuthenticated();
   const onSubmitHandler: SubmitHandler<IUserLoginValues> = async (data) => {
     await loginHandler(data.email, data.password);
   };
