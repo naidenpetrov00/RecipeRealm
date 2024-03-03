@@ -1,5 +1,5 @@
-mutation RegisterUser($input: RegisterUserInput!) {
-  registerUser(input: $input) {
+mutation RegisterUser($userInput: RegisterUserInput!) {
+  registerUser(userInput: $userInput) {
     user {
       userName
       email
@@ -12,8 +12,8 @@ mutation RegisterUser($input: RegisterUserInput!) {
   }
 }
 
-mutation LoginUser($input: LoginUserInput!) {
-  loginUser(userInput: $input) {
+mutation LoginUser($userInput: LoginUserInput!) {
+  loginUser(userInput: $userInput) {
     user {
       userName
       email

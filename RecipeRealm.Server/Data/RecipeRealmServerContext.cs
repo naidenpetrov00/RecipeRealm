@@ -1,10 +1,10 @@
 ﻿namespace RecipeRealm.Server.Data
 {
-	using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-	using Microsoft.EntityFrameworkCore;
-	using RecipeRealm.Server.Models.Identity;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using RecipeRealm.Server.Data.Models.Identity;
 
-	public class RecipeRealmServerContext : IdentityDbContext<RecipeRealmServerUser>
+    public class RecipeRealmServerContext : IdentityDbContext<RecipeRealmServerUser>
 	{
 		public RecipeRealmServerContext(DbContextOptions<RecipeRealmServerContext> options)
 			: base(options)

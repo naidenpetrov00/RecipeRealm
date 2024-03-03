@@ -25,7 +25,7 @@ export const useLoginUser = (): LoginHandlerResult => {
   const loginHandler = async (email: string, password: string) => {
     const result = await loginQuery({
       variables: {
-        input: {
+        userInput: {
           email: email,
           password: password,
         },
@@ -76,7 +76,7 @@ export const useRegisterUser = (): RegisterHandlerResult => {
   ) => {
     const result = await registerMutation({
       variables: {
-        input: {
+        userInput: {
           username,
           email,
           password,

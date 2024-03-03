@@ -1,7 +1,6 @@
 namespace RecipeRealm.Server
 {
 	using RecipeRealm.Server.Data;
-	using RecipeRealm.Server.Models.Identity;
 	using RecipeRealm.Server.GraphQL.Queries;
 	using RecipeRealm.Server.GraphQL.Mutations;
 
@@ -14,6 +13,9 @@ namespace RecipeRealm.Server
 	using RecipeRealm.Server.Services;
 	using RecipeRealm.Server.Services.Interfaces;
 	using System.IdentityModel.Tokens.Jwt;
+	using RecipeRealm.Server.Services.Identity;
+	using RecipeRealm.Server.Data.Models.Identity;
+	using RecipeRealm.Server.Infrastructure;
 
 	public class Program
 	{
@@ -24,50 +26,20 @@ namespace RecipeRealm.Server
 			var connectionString = configuration.GetConnectionString("RecipeRealmServerContextConnection");
 
 			builder.Services.AddCors();
-			builder.Services.AddAuthentication(options =>
-			{
-				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-			}).AddJwtBearer(opt =>
-			{
-				opt.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidIssuer = configuration.GetSection("JWT:ValidIssuer").Get<string>(),
-					ValidAudience = configuration.GetSection("JWT:ValidAudience").Get<string>(),
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-				};
-			});
+			builder.Services.AddJwtAuthentication(configuration);
+			builder.Services.AddIdentityServices();
 			builder.Services.AddAuthorization();
-			builder.Services
-				.AddDefaultIdentity<RecipeRealmServerUser>(options =>
-				{
-					options.User.RequireUniqueEmail = true;
-					options.SignIn.RequireConfirmedAccount = true;
-					options.Password.RequiredLength = 8;
-					options.Password.RequireNonAlphanumeric = false;
-				})
-				.AddEntityFrameworkStores<RecipeRealmServerContext>();
 
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
 
-			// Add services to the container.
 			builder.Services
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
 				.AddQueryType<Query>()
 				.AddMutationType<Mutation>();
 
-			builder.Services.AddTransient<JwtSecurityTokenHandler>();
-			builder.Services.AddScoped<UserManager<RecipeRealmServerUser>>();
-			builder.Services.AddScoped<SignInManager<RecipeRealmServerUser>>();
-			builder.Services.AddTransient<IJwtService, JwtService>();
+			builder.Services.AddInterfacedServices();
 			builder.Services.AddHttpContextAccessor();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
@@ -76,7 +48,6 @@ namespace RecipeRealm.Server
 			app.UseDefaultFiles();
 			app.UseStaticFiles();
 
-			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();

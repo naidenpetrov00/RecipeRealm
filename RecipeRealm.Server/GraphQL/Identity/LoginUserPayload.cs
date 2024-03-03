@@ -1,10 +1,9 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Identity
 {
-	using RecipeRealm.Server.Models.Identity;
+    using Microsoft.AspNetCore.Identity;
+    using RecipeRealm.Server.Data.Models.Identity;
 
-	using Microsoft.AspNetCore.Identity;
-
-	public record LoginUserPayload
+    public record LoginUserPayload
 	{
 		public RecipeRealmServerUser? User { get; set; } = null;
 

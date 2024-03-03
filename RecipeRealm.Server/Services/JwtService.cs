@@ -1,14 +1,14 @@
 ﻿namespace RecipeRealm.Server.Services
 {
-	using RecipeRealm.Server.Models.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	using Microsoft.IdentityModel.Tokens;
-	using System.Text;
-	using System.Security.Claims;
-	using System.IdentityModel.Tokens.Jwt;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Text;
+    using System.Security.Claims;
+    using System.IdentityModel.Tokens.Jwt;
+    using RecipeRealm.Server.Data.Models.Identity;
 
-	public class JwtService : IJwtService
+    public class JwtService : IJwtService
 	{
 		private readonly IConfiguration configuration;
 		private readonly JwtSecurityTokenHandler tokenHandler;
