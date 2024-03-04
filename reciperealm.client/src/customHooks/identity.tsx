@@ -18,7 +18,8 @@ interface LoginHandlerResult {
 export const useLoginUser = (): LoginHandlerResult => {
   const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
-  const [loginQuery] = useMutation(LoginUserDocument);
+  const [loginQuery, { error: loginQueryError }] =
+    useMutation(LoginUserDocument);
   const dispatch = useAppDispatch();
   const isAuthenticatedCookie = useIsAuthenticated();
 
@@ -30,6 +31,7 @@ export const useLoginUser = (): LoginHandlerResult => {
           password: password,
         },
       },
+      onError: (error) => console.log(error.networkError?.message),
     });
 
     if (result.data?.loginUser.jwtToken) {

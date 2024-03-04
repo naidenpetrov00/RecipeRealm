@@ -1,17 +1,29 @@
-﻿using RecipeRealm.Server.Common;
-using RecipeRealm.Server.Data.Models.Identity;
-using RecipeRealm.Server.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Configuration;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-
-namespace RecipeRealm.Server.Infrastructure
+﻿namespace RecipeRealm.Server.Infrastructure
 {
+	using RecipeRealm.Server.Common;
+	using RecipeRealm.Server.Data.Models.Identity;
+	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.GraphQL.Identity;
+
+	using System.Text;
+	using System.IdentityModel.Tokens.Jwt;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.AspNetCore.Authentication.JwtBearer;
+	using Microsoft.IdentityModel.Tokens;
+	using FluentValidation.AspNetCore;
+
 	public static class ServiceCollectionExtensions
 	{
+		public static IServiceCollection AddFluentValidationAndValidators(this IServiceCollection services)
+		{
+			services.AddFluentValidation();
+
+			services.AddTransient<LoginUserInputValidator>();
+			services.AddTransient<RegisterUserInputValidator>();
+
+			return services;
+		}
+
 		public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddAuthentication(options =>

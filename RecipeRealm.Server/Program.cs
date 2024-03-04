@@ -3,19 +3,12 @@ namespace RecipeRealm.Server
 	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.GraphQL.Queries;
 	using RecipeRealm.Server.GraphQL.Mutations;
+	using RecipeRealm.Server.Infrastructure;
 
 	using global::GraphQL.Server.Ui.Voyager;
 	using Microsoft.EntityFrameworkCore;
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.AspNetCore.Authentication.JwtBearer;
-	using Microsoft.IdentityModel.Tokens;
-	using System.Text;
-	using RecipeRealm.Server.Services;
-	using RecipeRealm.Server.Services.Interfaces;
-	using System.IdentityModel.Tokens.Jwt;
-	using RecipeRealm.Server.Services.Identity;
-	using RecipeRealm.Server.Data.Models.Identity;
-	using RecipeRealm.Server.Infrastructure;
+	using FluentValidation.AspNetCore;
+	using AppAny.HotChocolate.FluentValidation;
 
 	public class Program
 	{
@@ -26,6 +19,7 @@ namespace RecipeRealm.Server
 			var connectionString = configuration.GetConnectionString("RecipeRealmServerContextConnection");
 
 			builder.Services.AddCors();
+			builder.Services.AddFluentValidationAndValidators();
 			builder.Services.AddJwtAuthentication(configuration);
 			builder.Services.AddIdentityServices();
 			builder.Services.AddAuthorization();
@@ -36,7 +30,8 @@ namespace RecipeRealm.Server
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
 				.AddQueryType<Query>()
-				.AddMutationType<Mutation>();
+				.AddMutationType<Mutation>()
+				.AddFluentValidation();
 
 			builder.Services.AddInterfacedServices();
 			builder.Services.AddHttpContextAccessor();

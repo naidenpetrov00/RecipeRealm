@@ -57,7 +57,7 @@ const LoginPage = () => {
             className="form-control"
             {...register("password", {
               required: "This is required",
-              minLength: { value: 8, message: "Min length 8" },
+            /*  minLength: { value: 8, message: "Min length 8" },*/
               maxLength: { value: 20, message: "Max length 20" },
             })}
           />
