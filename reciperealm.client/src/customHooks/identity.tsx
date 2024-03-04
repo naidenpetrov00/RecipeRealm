@@ -15,7 +15,7 @@ export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 interface LoginHandlerResult {
   loginHandler: (email: string, password: string) => Promise<void>;
 }
-export const useLoginUser = (): LoginHandlerResult => {
+export const useLoginUser = () => {
   const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
   const [loginQuery, { error: loginQueryError }] =
@@ -31,7 +31,10 @@ export const useLoginUser = (): LoginHandlerResult => {
           password: password,
         },
       },
-      onError: (error) => console.log(error.networkError?.message),
+      onError(error, clientOptions) {
+        console.log(error.networkError);
+        
+      },
     });
 
     if (result.data?.loginUser.jwtToken) {

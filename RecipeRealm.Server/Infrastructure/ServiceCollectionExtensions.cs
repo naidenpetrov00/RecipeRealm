@@ -16,7 +16,7 @@
 	{
 		public static IServiceCollection AddFluentValidationAndValidators(this IServiceCollection services)
 		{
-			services.AddFluentValidation();
+			services.AddFluentValidationAutoValidation();
 
 			services.AddTransient<LoginUserInputValidator>();
 			services.AddTransient<RegisterUserInputValidator>();

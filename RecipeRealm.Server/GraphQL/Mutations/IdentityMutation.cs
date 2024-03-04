@@ -1,8 +1,9 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Mutations
 {
-	using AppAny.HotChocolate.FluentValidation;
 	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Services.Interfaces;
+
+	using AppAny.HotChocolate.FluentValidation;
 
 	public abstract class IdentityMutation
 	{
@@ -10,12 +11,14 @@
 			[UseFluentValidation, UseValidator<RegisterUserInputValidator>] RegisterUserInput userInput,
 			[Service] IUserService userService)
 		{
+
 			return await userService.RegisterUser(userInput);
 		}
 
 		public async Task<LoginUserPayload> LoginUser(
 			[UseFluentValidation, UseValidator<LoginUserInputValidator>] LoginUserInput userInput,
-			[Service] IUserService userService)
+			[Service] IUserService userService,
+			[Service] LoginUserInputValidator validations)
 		{
 			return await userService.LoginUser(userInput);
 		}

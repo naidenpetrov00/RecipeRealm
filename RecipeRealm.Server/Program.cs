@@ -29,9 +29,9 @@ namespace RecipeRealm.Server
 			builder.Services
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
+				.AddFluentValidation()
 				.AddQueryType<Query>()
-				.AddMutationType<Mutation>()
-				.AddFluentValidation();
+				.AddMutationType<Mutation>();
 
 			builder.Services.AddInterfacedServices();
 			builder.Services.AddHttpContextAccessor();
@@ -52,7 +52,8 @@ namespace RecipeRealm.Server
 			app.UseCors(o => o
 			 .AllowAnyHeader()
 			 .AllowAnyMethod()
-			 .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!));
+			 .AllowAnyOrigin());
+			// .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!));
 			app.UseHttpsRedirection();
 			app.UseAuthentication();
 			app.UseAuthorization();
