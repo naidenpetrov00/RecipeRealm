@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, ApolloError, ServerError } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
@@ -15,11 +15,10 @@ export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 interface LoginHandlerResult {
   loginHandler: (email: string, password: string) => Promise<void>;
 }
-export const useLoginUser = () => {
+export const useLoginUser = (): LoginHandlerResult => {
   const signIn = useSignIn<IUserLoginValues>();
   const navigate = useNavigate();
-  const [loginQuery, { error: loginQueryError }] =
-    useMutation(LoginUserDocument);
+  const [loginQuery] = useMutation(LoginUserDocument, { errorPolicy: "all" });
   const dispatch = useAppDispatch();
   const isAuthenticatedCookie = useIsAuthenticated();
 
@@ -31,10 +30,7 @@ export const useLoginUser = () => {
           password: password,
         },
       },
-      onError(error, clientOptions) {
-        console.log(error.networkError);
-        
-      },
+      onError: onErrorHandler,
     });
 
     if (result.data?.loginUser.jwtToken) {
@@ -87,6 +83,7 @@ export const useRegisterUser = (): RegisterHandlerResult => {
           password,
         },
       },
+      onError: onErrorHandler,
     });
 
     if (result.data?.registerUser.jwtToken) {
@@ -111,4 +108,10 @@ export const useRegisterUser = (): RegisterHandlerResult => {
   };
 
   return { registerHandler };
+};
+
+const onErrorHandler = ({ networkError }: { networkError: any }) => {
+  for (const item of networkError!.result.errors) {
+    alert(`${item.extensions.code}: \n${item.message}`);
+  }
 };

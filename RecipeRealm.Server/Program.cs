@@ -9,6 +9,7 @@ namespace RecipeRealm.Server
 	using Microsoft.EntityFrameworkCore;
 	using FluentValidation.AspNetCore;
 	using AppAny.HotChocolate.FluentValidation;
+	using NuGet.Protocol;
 
 	public class Program
 	{
@@ -23,15 +24,15 @@ namespace RecipeRealm.Server
 			builder.Services.AddJwtAuthentication(configuration);
 			builder.Services.AddIdentityServices();
 			builder.Services.AddAuthorization();
-
+			builder.Services.AddLogging();
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
 
 			builder.Services
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
-				.AddFluentValidation()
 				.AddQueryType<Query>()
-				.AddMutationType<Mutation>();
+				.AddMutationType<Mutation>()
+				.AddFluentValidation();
 
 			builder.Services.AddInterfacedServices();
 			builder.Services.AddHttpContextAccessor();

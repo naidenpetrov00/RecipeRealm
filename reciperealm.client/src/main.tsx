@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider, from } from "@apollo/client";
 
 import App from "./App.tsx";
 import { store as reduxStore } from "./store/store.ts";
@@ -15,7 +15,6 @@ const client = new ApolloClient({
   name: "RecipeRealm",
   version: "0.1",
 });
-
 const authStore = createStore<IUserLoginValues>({
   authName: "_auth",
   authType: "cookie",

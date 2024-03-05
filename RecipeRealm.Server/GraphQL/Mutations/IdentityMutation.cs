@@ -11,7 +11,6 @@
 			[UseFluentValidation, UseValidator<RegisterUserInputValidator>] RegisterUserInput userInput,
 			[Service] IUserService userService)
 		{
-
 			return await userService.RegisterUser(userInput);
 		}
 
@@ -20,7 +19,16 @@
 			[Service] IUserService userService,
 			[Service] LoginUserInputValidator validations)
 		{
-			return await userService.LoginUser(userInput);
+			try
+			{
+
+				return await userService.LoginUser(userInput);
+			}
+			catch (Exception ex)
+			{
+
+				throw ex;
+			}
 		}
 	}
 }
