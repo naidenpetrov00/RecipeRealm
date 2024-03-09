@@ -6,18 +6,33 @@
 	using RecipeRealm.Server.Data.Exceptions.Identity;
 
 	using Microsoft.AspNetCore.Identity;
+	using Microsoft.EntityFrameworkCore;
+	using RecipeRealm.Server.Data;
 
 	public class UserService : IUserService
 	{
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly IJwtService jwtService;
+		private readonly RecipeRealmServerContext dbContext;
 
 		public UserService(
 			UserManager<RecipeRealmServerUser> userManager,
-			IJwtService jwtService)
+			IJwtService jwtService,
+			RecipeRealmServerContext dbContext)
 		{
 			this.userManager = userManager;
 			this.jwtService = jwtService;
+			this.dbContext = dbContext;
+		}
+
+		public async Task<bool> CheckForEmail(string email)
+		{
+			return !await dbContext.Users.AnyAsync(u => u.Email == email);
+		}
+
+		public async Task<bool> CheckForUsername(string username)
+		{
+			return !await dbContext.Users.AnyAsync(u => u.UserName == username);
 		}
 
 		public RecipeRealmServerUser CreateUser(RegisterUserInput userInput)

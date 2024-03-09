@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeRealm.Server", "Recip
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reciperealm.client", "reciperealm.client\reciperealm.client.esproj", "{B9EA455C-152A-48AB-AD07-75588F6502B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeRealm.Server.Tests", "RecipeRealm.Server.Tests\RecipeRealm.Server.Tests.csproj", "{1DE5090C-B241-4FDD-9F94-5AE0CD9CEC47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeRealm.Server.UnitTests", "RecipeRealm.Server.Tests\RecipeRealm.Server.UnitTests.csproj", "{1DE5090C-B241-4FDD-9F94-5AE0CD9CEC47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{920CA6A1-12AB-4227-BCCE-835E78561B61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1DE5090C-B241-4FDD-9F94-5AE0CD9CEC47} = {920CA6A1-12AB-4227-BCCE-835E78561B61}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E27792B-1D21-4881-B910-4A5175F57EE2}

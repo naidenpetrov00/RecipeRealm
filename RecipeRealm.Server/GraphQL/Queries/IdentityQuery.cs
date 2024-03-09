@@ -1,17 +1,21 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Queries
 {
-	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.Services.Interfaces;
 
 	public abstract class IdentityQuery
 	{
-		public bool CheckUsernameAvailability(string username, RecipeRealmServerContext dbContext)
+        public async Task<bool> CheckUsernameAvailability(
+			string username,
+			[Service] IUserService userService)
 		{
-			return !dbContext.Users.Any(u => u.UserName == username);
+			return await userService.CheckForUsername(username);
 		}
 
-		public bool CheckEmailAvailability(string email, RecipeRealmServerContext dbContext)
+		public async Task<bool> CheckEmailAvailability(
+			string email,
+			[Service] IUserService userService)
 		{
-			return !dbContext.Users.Any(u => u.Email == email);
+			return await userService.CheckForEmail(email);
 		}
 	}
 }

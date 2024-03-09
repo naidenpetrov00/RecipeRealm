@@ -16,19 +16,9 @@
 
 		public async Task<LoginUserPayload> LoginUser(
 			[UseFluentValidation, UseValidator<LoginUserInputValidator>] LoginUserInput userInput,
-			[Service] IUserService userService,
-			[Service] LoginUserInputValidator validations)
+			[Service] IUserService userService)
 		{
-			try
-			{
-
-				return await userService.LoginUser(userInput);
-			}
-			catch (Exception ex)
-			{
-
-				throw ex;
-			}
+			return await userService.LoginUser(userInput);
 		}
 	}
 }
