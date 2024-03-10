@@ -2,12 +2,12 @@
 {
 	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.Data.Models.Identity;
 	using RecipeRealm.Server.Data.Exceptions.Identity;
 
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.EntityFrameworkCore;
-	using RecipeRealm.Server.Data;
 
 	public class UserService : IUserService
 	{
@@ -22,6 +22,7 @@
 		{
 			this.userManager = userManager;
 			this.jwtService = jwtService;
+
 			this.dbContext = dbContext;
 		}
 
@@ -69,7 +70,7 @@
 		public async Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput)
 		{
 			var user = this.CreateUser(userInput);
-			var result = await userManager.CreateAsync(user);
+			var result = await userManager.CreateAsync(user,userInput.Password);
 
 			if (result.Succeeded)
 			{
