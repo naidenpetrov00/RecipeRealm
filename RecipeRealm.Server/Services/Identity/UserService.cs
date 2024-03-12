@@ -59,7 +59,7 @@
 				var jwtToken = jwtService.CreateToken(user);
 				return new LoginUserPayload()
 				{
-					User = user,
+					User = user,	
 					JwtToken = jwtToken
 				};
 			}
@@ -78,6 +78,6 @@
 				return new RegisterUserPayload { User = user, JwtToken = jwtToken };
 			}
 			return new RegisterUserPayload { Errors = result.Errors };
-		}
+			}
 	}
 }
