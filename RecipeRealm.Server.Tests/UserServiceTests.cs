@@ -11,7 +11,6 @@
 	using Xunit;
 	using FluentAssertions;
 	using Microsoft.AspNetCore.Identity;
-	using Newtonsoft.Json.Linq;
 
 	public class UserServiceTests
 	{
