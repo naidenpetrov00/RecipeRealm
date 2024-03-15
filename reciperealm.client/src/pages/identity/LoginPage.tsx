@@ -11,7 +11,7 @@ const LoginPage = () => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<IUserLoginValues>({
+  } = useForm<IUserLoginValues>({ 
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
