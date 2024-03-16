@@ -90,7 +90,7 @@ const LoginPage = () => {
           type="submit"
           className={"btn btn-primary btn-block mb-4 " + styles.button}
         >
-          Sign in
+          Sign In
         </button>
 
         <div className="text-center">
