@@ -15,7 +15,6 @@ const LoginPage = () => {
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
-
   const { loginHandler } = useLoginUser();
   const onSubmitHandler: SubmitHandler<IUserLoginValues> = async (data) => {
     await loginHandler(data.email, data.password);

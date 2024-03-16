@@ -1,9 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import * as useFormHook from "react-hook-form";
+import { useForm } from "react-hook-form";
 import "@testing-library/jest-dom";
 import LoginPage from "../identity/LoginPage";
+import { act } from "react-dom/test-utils";
 
+interface Error {
+  email?: { message: string };
+  password?: { message: string };
+}
 jest.mock("../../customHooks/identity", () => ({
   useLoginUser: jest.fn(() => {
     return { loginHandler: jest.fn() };
@@ -11,17 +16,41 @@ jest.mock("../../customHooks/identity", () => ({
 }));
 jest.mock("react-hook-form", () => ({
   __esModule: true,
-  useForm: jest.fn(() => ({
-    register: jest.fn(),
-    handleSubmit: jest.fn(),
-    formState: {
+  useForm: jest.fn(() => {
+    let formState = {
       errors: {
-        email: { message: "" },
-        password: { message: "" },
+        email: { message: "op" },
       },
-    },
-  })),
+    };
+
+    const setError = jest.fn((message) => {
+      console.log("from the func");
+      formState.errors.email.message = message;
+    });
+
+    return {
+      register: jest.fn(),
+      handleSubmit: jest.fn(),
+      setError,
+      formState,
+    };
+  }),
 }));
+// jest.mock("react-hook-form", () => ({
+//   __esModule: true,
+//   useForm: jest.fn(() => ({
+//     register: jest.fn(),
+//     handleSubmit: jest.fn(),
+//     setError: jest.fn(() => {
+//       console.log("from the func");
+//     }),
+//     formState: {
+//       errors: {
+//         email: { message: "op" },
+//       },
+//     },
+//   })),
+// }));
 
 describe("LoginPage Component", () => {
   describe("renders", () => {
@@ -43,13 +72,12 @@ describe("LoginPage Component", () => {
 
   describe("display error message for", () => {
     test("invalid email", async () => {
-      const user = userEvent.setup({});
+      const user = userEvent.setup();
+      const { formState, setError } = useForm();
+      console.log(formState);
+      setError("provided");
+      console.log(formState);
       render(<LoginPage />);
-      console.log(useFormHook.useForm().formState.errors);
-      useFormHook.useForm().formState.errors.email!.message = "Provide valid email";
-      console.log(useFormHook.useForm().formState.errors);
-
-
       const emailInput = screen.getByLabelText("Email address");
       user.type(emailInput, "invalidemail");
       emailInput.blur();
