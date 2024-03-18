@@ -1,8 +1,11 @@
-import { Fragment } from "react";
+import { NavLink } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { useLoginUser } from "../../customHooks/identity";
-import { IUserLoginValues } from "../../abstractions/identity";
+import {
+  IUserLoginValues,
+  InvalidInputErrorMessges,
+} from "../../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
 
@@ -11,7 +14,7 @@ const LoginPage = () => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<IUserLoginValues>({ 
+  } = useForm<IUserLoginValues>({
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
@@ -21,51 +24,57 @@ const LoginPage = () => {
   };
 
   return (
-    <Fragment>
-      <form
-        method="POST"
-        className={styles.form}
-        onSubmit={handleSubmit(onSubmitHandler)}
-      >
-        <h1 className={styles.pageInfo}>Login</h1>
-        <div className={"form-outline mb-4 " + styles.outline}>
-          {errors.email && (
-            <p className="text-danger">{errors.email.message}</p>
-          )}
-          <input
-            type="email"
-            id="form2Example1"
-            className="form-control"
-            {...register("email", {
-              required: "This is required",
-              pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
-            })}
-          />
-          <label className="form-label" htmlFor="form2Example1">
-            Email address
-          </label>
-        </div>
+    <form
+      method="POST"
+      className={styles.form}
+      onSubmit={handleSubmit(onSubmitHandler)}
+    >
+      <h1 className={styles.pageInfo}>Login</h1>
+      <div className={"form-outline mb-4 " + styles.outline}>
+        {errors.email && <p className="text-danger">{errors.email.message}</p>}
+        <input
+          type="email"
+          id="form2Example1"
+          className="form-control"
+          {...register("email", {
+            required: InvalidInputErrorMessges.EmptyInput,
+            pattern: {
+              message: InvalidInputErrorMessges.InvalidEmail,
+              value: /^\S+@\S+$/i,
+            },
+          })}
+        />
+        <label className="form-label" htmlFor="form2Example1">
+          Email address
+        </label>
+      </div>
 
-        <div className={"form-outline mb-4 " + styles.outline}>
-          {errors.password && (
-            <p className="text-danger">{errors.password.message}</p>
-          )}
-          <input
-            type="password"
-            id="form2Example2"
-            className="form-control"
-            {...register("password", {
-              required: "This is required",
-              minLength: { value: 8, message: "Min length 8" },
-              maxLength: { value: 20, message: "Max length 20" },
-            })}
-          />
-          <label className="form-label" htmlFor="form2Example2">
-            Password
-          </label>
-        </div>
+      <div className={"form-outline mb-4 " + styles.outline}>
+        {errors.password && (
+          <p className="text-danger">{errors.password.message}</p>
+        )}
+        <input
+          type="password"
+          id="form2Example2"
+          className="form-control"
+          {...register("password", {
+            required: "This is required",
+            minLength: {
+              value: 8,
+              message: InvalidInputErrorMessges.MinLength8,
+            },
+            maxLength: {
+              value: 20,
+              message: InvalidInputErrorMessges.MaxLength20,
+            },
+          })}
+        />
+        <label className="form-label" htmlFor="form2Example2">
+          Password
+        </label>
+      </div>
 
-        <div className="row mb-4">
+      {/* <div className="row mb-4">
           <div className="col d-flex justify-content-center">
             <div className="form-check">
               <input
@@ -83,38 +92,21 @@ const LoginPage = () => {
           <div className="col">
             <a href="#!">Forgot password?</a>
           </div>
-        </div>
+        </div> */}
 
-        <button
-          type="submit"
-          className={"btn btn-primary btn-block mb-4 " + styles.button}
-        >
-          Sign In
-        </button>
+      <button
+        type="submit"
+        className={"btn btn-primary btn-block mb-4 " + styles.button}
+      >
+        Sign In
+      </button>
 
-        <div className="text-center">
-          <p>
-            Not a member? <a href="#!">Register</a>
-          </p>
-          <p>or sign up with:</p>
-          <button type="button" className="btn btn-link btn-floating mx-1">
-            <i className="fab fa-facebook-f"></i>
-          </button>
-
-          <button type="button" className="btn btn-link btn-floating mx-1">
-            <i className="fab fa-google"></i>
-          </button>
-
-          <button type="button" className="btn btn-link btn-floating mx-1">
-            <i className="fab fa-twitter"></i>
-          </button>
-
-          <button type="button" className="btn btn-link btn-floating mx-1">
-            <i className="fab fa-github"></i>
-          </button>
-        </div>
-      </form>
-    </Fragment>
+      <div className="text-center">
+        <p>
+          Not a member? <NavLink to="/register">Register</NavLink>
+        </p>
+      </div>
+    </form>
   );
 };
 

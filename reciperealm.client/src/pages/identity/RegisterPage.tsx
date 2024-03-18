@@ -7,9 +7,13 @@ import {
   CheckUsernameAvailabilityDocument,
 } from "../../generted/graphql";
 import { useRegisterUser } from "../../customHooks/identity";
-import { IUserRegisterValues } from "../../abstractions/identity";
+import {
+  IUserRegisterValues,
+  InvalidInputErrorMessges,
+} from "../../abstractions/identity";
 
 import styles from "./LoginPage.module.css";
+import { NavLink } from "react-router-dom";
 
 const RegisterPage = () => {
   const {
@@ -59,13 +63,19 @@ const RegisterPage = () => {
           className={"form-control " + styles.input}
           autoComplete="off"
           {...register("username", {
-            minLength: { value: 6, message: "Min length 6" },
-            maxLength: { value: 20, message: "Max length 20" },
-            required: "This is reqiured",
+            minLength: {
+              value: 8,
+              message: InvalidInputErrorMessges.MinLength8,
+            },
+            maxLength: {
+              value: 20,
+              message: InvalidInputErrorMessges.MaxLength20,
+            },
+            required: InvalidInputErrorMessges.EmptyInput,
             validate: (): string | undefined => {
               return usernameQueryData?.checkUsernameAvailability
                 ? undefined
-                : "Username is not available!";
+                : InvalidInputErrorMessges.UsernameIsNotAvailable;
             },
           })}
           onChange={onChangeUsernameHandler}
@@ -83,12 +93,15 @@ const RegisterPage = () => {
           className={"form-control " + styles.input}
           autoComplete="off"
           {...register("email", {
-            required: "This is reqiured",
-            pattern: { message: "Provide valid email", value: /^\S+@\S+$/i },
+            required: InvalidInputErrorMessges.EmptyInput,
+            pattern: {
+              message: InvalidInputErrorMessges.InvalidEmail,
+              value: /^\S+@\S+$/i,
+            },
             validate: (): string | undefined => {
               return emailQuerydata?.checkEmailAvailability
                 ? undefined
-                : "Account with this Email already exists";
+                : InvalidInputErrorMessges.AccountWithThisEmailAlreadyExists;
             },
           })}
           onChange={onChangeEmailHandler}
@@ -105,13 +118,18 @@ const RegisterPage = () => {
         <input
           defaultValue=""
           {...register("password", {
-            required: "This is reqiured",
-            minLength: { value: 8, message: "Min length 8" },
-            maxLength: { value: 20, message: "Max length 20" },
+            required: InvalidInputErrorMessges.EmptyInput,
+            minLength: {
+              value: 8,
+              message: InvalidInputErrorMessges.MinLength8,
+            },
+            maxLength: {
+              value: 20,
+              message: InvalidInputErrorMessges.MaxLength20,
+            },
             pattern: {
               value: /(?=.*[A-Z])(?=.*\d).+/,
-              message:
-                "Passport must contain at least one uppercase letter and one number",
+              message: InvalidInputErrorMessges.PassportReqUppercaseAndNumber,
             },
           })}
           type="password"
@@ -130,9 +148,10 @@ const RegisterPage = () => {
         )}
         <input
           {...register("confirmPassword", {
-            required: "This is reqiured",
+            required: InvalidInputErrorMessges.EmptyInput,
             validate: (value: string) =>
-              value === watch("password") || "Password must match",
+              value === watch("password") ||
+              InvalidInputErrorMessges.PasswordsMustMatch,
           })}
           type="password"
           id="confirmPassword"
@@ -150,6 +169,12 @@ const RegisterPage = () => {
       >
         Register
       </button>
+
+      <div className="text-center">
+        <p>
+          Already have account? <NavLink to="/login">Sign In</NavLink>
+        </p>
+      </div>
     </form>
   );
 };
