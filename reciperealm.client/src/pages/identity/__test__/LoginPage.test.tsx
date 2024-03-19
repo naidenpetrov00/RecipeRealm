@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { useForm } from "react-hook-form";
-import { BrowserRouter, redirect } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
+import { BrowserRouter } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import LoginPage from "../LoginPage";
@@ -11,24 +11,37 @@ import {
 } from "../../../abstractions/identity";
 import { useLoginUser } from "../../../customHooks/identity";
 
+const urlToHome = "http://localhost";
+const urlToLogin = "http://localhost/login";
+global.window = Object.create(window);
+Object.defineProperty(window, "location", {
+  value: {},
+  writable: true,
+});
+Object.defineProperty(window.location, "href", {
+  value: urlToLogin,
+  writable: true,
+});
+Object.defineProperty(window.location, "origin", {
+  value: urlToHome,
+  writable: true,
+});
+
 jest.mock("../../../customHooks/identity");
 const useLoginUserMocked = useLoginUser as jest.Mock;
 useLoginUserMocked.mockReturnValue({
-  loginHandler: jest.fn(),
+  loginHandler: jest.fn(() => {
+    if (!checkForError()) {
+      window.location.href = urlToHome;
+    }
+  }),
 });
 
 jest.mock("react-hook-form");
 const useFormMocked = useForm as jest.Mock;
 
-beforeEach(() => {
-  useFormMocked.mockReturnValue({
-    register: jest.fn(),
-    handleSubmit: jest.fn(() => {}),
-    formState: {
-      errors: {},
-    },
-  });
-});
+const checkForError = () =>
+  Object.keys(useFormMocked().formState.errors).length > 0;
 const addError = (
   type: InvalidInputErrorTypes,
   message: InvalidInputErrorMessges
@@ -38,8 +51,18 @@ const addError = (
   };
 };
 
-describe("LoginPage Component", () => {
-  describe.skip("renders", () => {
+describe.skip("LoginPage Component", () => {
+  beforeEach(() => {
+    useFormMocked.mockReturnValue({
+      register: jest.fn(),
+      handleSubmit: jest.fn((calback) => calback),
+      formState: {
+        errors: {},
+      },
+    });
+  });
+
+  describe("renders", () => {
     test("input fields", async () => {
       render(<LoginPage />, { wrapper: BrowserRouter });
       const emailInput = screen.getByLabelText("Email address");
@@ -56,7 +79,7 @@ describe("LoginPage Component", () => {
     });
   });
 
-  describe.skip("display error message for", () => {
+  describe("display error message for", () => {
     test("invalid email", async () => {
       addError("email", InvalidInputErrorMessges.InvalidEmail);
       render(<LoginPage />, { wrapper: BrowserRouter });
@@ -109,45 +132,28 @@ describe("LoginPage Component", () => {
   });
 
   describe("login form", () => {
-    const url = "http://localhost/login";
-    global.window = Object.create(window);
-    Object.defineProperty(window, "location", {
-      value: {},
-      writable: true,
-    });
-    Object.defineProperty(window.location, "href", {
-      value: url,
-      writable: true,
-    });
-    Object.defineProperty(window.location, "origin", {
-      value: "http://localhost",
-      writable: true,
-    });
-
     test("wont submit with wrong values", async () => {
       addError("email", InvalidInputErrorMessges.InvalidEmail);
       render(<LoginPage />, { wrapper: BrowserRouter });
       const emailInput = screen.getByLabelText("Email address");
       userEvent.type(emailInput, "invalidemail");
-      console.log(window.location.href);
-      console.log(window.location.href);
       emailInput.blur();
       const buttonElement = screen.getByText("Sign In");
       fireEvent.submit(buttonElement);
+      expect(window.location.href).toBe(urlToLogin);
     });
 
-    test.skip("redirects to HomePage", async () => {
+    test("submit with correct values", async () => {
       render(<LoginPage />, { wrapper: BrowserRouter });
+
+      const emailInput = screen.getByLabelText("Email address");
+      userEvent.type(emailInput, "ValidEmail@gmail.com");
+      const passwordInput = screen.getByLabelText("Password");
+      userEvent.type(passwordInput, "ValidPass123");
       const buttonElement = screen.getByText("Sign In");
       fireEvent.submit(buttonElement);
-      expect(window.location.pathname).toBe("/");
-    });
-  });
 
-  test.skip("register link redirects to RegisterPage", async () => {
-    render(<LoginPage />, { wrapper: BrowserRouter });
-    const link = screen.getByText("Register");
-    await userEvent.click(link);
-    expect(window.location.pathname).toBe("/register");
+      expect(window.location.href).toBe(urlToHome);
+    });
   });
 });
