@@ -1,9 +1,9 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import RootLayout from "./pages/RootLayout";
-import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
-import MyRecipes from "./pages/MyRecipes";
+import MyAccount from "./pages/MyAccount";
+import ErrorPage from "./pages/ErrorPage";
+import RootLayout from "./pages/RootLayout";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
@@ -16,10 +16,10 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       {
-        path: "myrecipes",
+        path: "myaccount",
         element: (
           <RequireAuth fallbackPath="/login">
-            <MyRecipes />
+            <MyAccount />
           </RequireAuth>
         ),
       },

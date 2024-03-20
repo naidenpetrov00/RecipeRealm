@@ -51,7 +51,7 @@ const addError = (
   };
 };
 
-describe.skip("LoginPage Component", () => {
+describe("LoginPage Component", () => {
   beforeEach(() => {
     useFormMocked.mockReturnValue({
       register: jest.fn(),
