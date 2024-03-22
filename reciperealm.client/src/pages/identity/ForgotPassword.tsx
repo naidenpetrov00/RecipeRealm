@@ -1,6 +1,15 @@
 import { NavLink } from "react-router-dom";
+import ReCaptcha from "../../components/ReCaptcha";
+import { FormEvent, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const ForgotPassword = () => {
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
+  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const email = event.currentTarget.email.value;
+  };
+
   return (
     <section className="py-3 py-md-5 py-xl-8">
       <div className="container">
@@ -11,7 +20,7 @@ const ForgotPassword = () => {
             </div>
             <div className="card border border-light-subtle rounded-4">
               <div className="card-body p-3 p-md-4 p-xl-5">
-                <form action="#!">
+                <form method="POST" onSubmit={onSubmitHandler}>
                   <p className="text-center mb-4">
                     Provide the email address associated with your account to
                     recover your password.
@@ -32,6 +41,7 @@ const ForgotPassword = () => {
                         </label>
                       </div>
                     </div>
+                    <ReCaptcha reCaptchaRef={reCaptchaRef} />
                     <div className="col-12">
                       <div className="d-grid">
                         <button

@@ -1,11 +1,14 @@
+import { useRef } from "react";
 import { NavLink } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useLoginUser } from "../../customHooks/identity";
 import {
   IUserLoginValues,
   InvalidInputErrorMessges,
 } from "../../abstractions/identity";
+import ReCaptcha from "../../components/ReCaptcha";
+import { useLoginUser } from "../../customHooks/identity";
 
 import styles from "./LoginPage.module.css";
 
@@ -18,8 +21,11 @@ const LoginPage = () => {
     mode: "onBlur",
     reValidateMode: "onBlur",
   });
+
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const { loginHandler } = useLoginUser();
   const onSubmitHandler: SubmitHandler<IUserLoginValues> = async (data) => {
+    reCaptchaRef.current?.execute();
     await loginHandler(data.email, data.password);
   };
 
@@ -73,6 +79,7 @@ const LoginPage = () => {
           Password
         </label>
       </div>
+      <ReCaptcha reCaptchaRef={reCaptchaRef} />
       <button
         type="submit"
         className={"btn btn-primary btn-block mb-4 " + styles.button}

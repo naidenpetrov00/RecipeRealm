@@ -1,20 +1,25 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useRef } from "react";
 import { useLazyQuery } from "@apollo/client";
-import ReCAPTCHA from "react-google-recaptcha";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
   CheckEmailAvailabilityDocument,
   CheckUsernameAvailabilityDocument,
 } from "../../generted/graphql";
-import { useRegisterUser } from "../../customHooks/identity";
+import {
+  useCheckEmailAvailability,
+  useCheckUsernameAvailability,
+  useRegisterUser,
+} from "../../customHooks/identity";
 import {
   IUserRegisterValues,
   InvalidInputErrorMessges,
 } from "../../abstractions/identity";
+import { NavLink } from "react-router-dom";
+import ReCaptcha from "../../components/ReCaptcha";
 
 import styles from "./LoginPage.module.css";
-import { NavLink } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const RegisterPage = () => {
   const {
@@ -27,33 +32,25 @@ const RegisterPage = () => {
     reValidateMode: "onBlur",
   });
 
-  const [checkEmailQuery, { data: emailQuerydata }] = useLazyQuery(
-    CheckEmailAvailabilityDocument
-  );
-  const [checkUsernameQuery, { data: usernameQueryData }] = useLazyQuery(
-    CheckUsernameAvailabilityDocument
-  );
+  const { checkUsername, usernameQueryData } = useCheckUsernameAvailability();
   const onChangeUsernameHandler = async (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    await checkUsernameQuery({
-      variables: { username: event.target.value },
-    });
+    const username = event.target.value;
+    checkUsername(username);
   };
+  const { checkEmail, emailQuerydata } = useCheckEmailAvailability();
   const onChangeEmailHandler = async (event: ChangeEvent<HTMLInputElement>) => {
-    await checkEmailQuery({
-      variables: { email: event.target.value },
-    });
+    const email = event.target.value;
+    checkEmail(email);
   };
 
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const { registerHandler } = useRegisterUser();
   const onSubmitHandler: SubmitHandler<IUserRegisterValues> = async (data) => {
+    reCaptchaRef.current?.execute();
     registerHandler(data.username, data.email, data.password);
   };
-  const handleCaptcha = (value) => {
-    console.log("Captcha value:", value);
-  };
-
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
       <h1 className={styles.pageInfo}>Register</h1>
@@ -163,11 +160,7 @@ const RegisterPage = () => {
           Confirm Password
         </label>
       </div>
-      <ReCAPTCHA
-        sitekey="6LfuOaEpAAAAAKloxQIddfzn0lCk5bvgPZt1HIlm"
-        onChange={handleCaptcha}
-      />
-      ,
+      <ReCaptcha reCaptchaRef={reCaptchaRef} />
       <button
         type="submit"
         className={"btn btn-primary btn-block mb-4 " + styles.button}

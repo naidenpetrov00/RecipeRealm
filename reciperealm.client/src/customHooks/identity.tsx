@@ -1,12 +1,19 @@
-import { useMutation, ApolloError, ServerError } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { useMutation, useLazyQuery } from "@apollo/client";
 
+import {
+  CheckEmailAvailabilityDocument,
+  CheckEmailAvailabilityQuery,
+  CheckUsernameAvailabilityDocument,
+  CheckUsernameAvailabilityQuery,
+  LoginUserDocument,
+  RegisterUserDocument,
+} from "../generted/graphql";
+import { authenticated } from "../store/authSlice";
 import { AppDispatch, RootState } from "../store/store";
 import { IUserLoginValues } from "../abstractions/identity";
-import { LoginUserDocument, RegisterUserDocument } from "../generted/graphql";
-import { authenticated } from "../store/authSlice";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 export const useAppSelector = useSelector.withTypes<RootState>();
@@ -108,6 +115,45 @@ export const useRegisterUser = (): RegisterHandlerResult => {
   };
 
   return { registerHandler };
+};
+
+interface CheckUsernameAvailabilityResult {
+  checkUsername: (username: string) => Promise<void>;
+  usernameQueryData?: CheckUsernameAvailabilityQuery;
+}
+
+export const useCheckUsernameAvailability =
+  (): CheckUsernameAvailabilityResult => {
+    const [checkUsernameQuery, { data: usernameQueryData }] = useLazyQuery(
+      CheckUsernameAvailabilityDocument
+    );
+
+    const checkUsername = async (username: string) => {
+      await checkUsernameQuery({
+        variables: { username },
+      });
+    };
+
+    return { checkUsername, usernameQueryData };
+  };
+
+interface CheckEmailAvailabilityResult {
+  checkEmail: (email: string) => Promise<void>;
+  emailQuerydata?: CheckEmailAvailabilityQuery;
+}
+
+export const useCheckEmailAvailability = (): CheckEmailAvailabilityResult => {
+  const [checkEmailQuery, { data: emailQuerydata }] = useLazyQuery(
+    CheckEmailAvailabilityDocument
+  );
+
+  const checkEmail = async (email: string) => {
+    await checkEmailQuery({
+      variables: { email },
+    });
+  };
+
+  return { checkEmail, emailQuerydata };
 };
 
 const onErrorHandler = ({ networkError }: { networkError: any }) => {
