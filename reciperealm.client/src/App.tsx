@@ -7,6 +7,7 @@ import RootLayout from "./pages/RootLayout";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
+import ForgotPassword from "./pages/identity/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
     ],
   },
 ]);

@@ -1,6 +1,7 @@
 import { ChangeEvent } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { useLazyQuery } from "@apollo/client";
+import ReCAPTCHA from "react-google-recaptcha";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
   CheckEmailAvailabilityDocument,
@@ -49,6 +50,9 @@ const RegisterPage = () => {
   const onSubmitHandler: SubmitHandler<IUserRegisterValues> = async (data) => {
     registerHandler(data.username, data.email, data.password);
   };
+  const handleCaptcha = (value) => {
+    console.log("Captcha value:", value);
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
@@ -84,7 +88,6 @@ const RegisterPage = () => {
           Username
         </label>
       </div>
-
       <div className={"form-outline mb-4 " + styles.outline}>
         {errors.email && <p className="text-danger">{errors.email.message}</p>}
         <input
@@ -110,7 +113,6 @@ const RegisterPage = () => {
           Email address
         </label>
       </div>
-
       <div className={"form-outline mb-4 " + styles.outline}>
         {errors.password && (
           <p className="text-danger">{errors.password.message}</p>
@@ -141,7 +143,6 @@ const RegisterPage = () => {
           Password
         </label>
       </div>
-
       <div className={"form-outline mb-4 " + styles.outline}>
         {errors.confirmPassword && (
           <p className="text-danger">{errors.confirmPassword.message}</p>
@@ -162,14 +163,17 @@ const RegisterPage = () => {
           Confirm Password
         </label>
       </div>
-
+      <ReCAPTCHA
+        sitekey="6LfuOaEpAAAAAKloxQIddfzn0lCk5bvgPZt1HIlm"
+        onChange={handleCaptcha}
+      />
+      ,
       <button
         type="submit"
         className={"btn btn-primary btn-block mb-4 " + styles.button}
       >
         Register
       </button>
-
       <div className="text-center">
         <p>
           Already have account? <NavLink to="/login">Sign In</NavLink>
