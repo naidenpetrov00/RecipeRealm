@@ -1,4 +1,4 @@
-import { FC, RefObject, useRef } from "react";
+import { FC, RefObject } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 interface YourComponentProps {

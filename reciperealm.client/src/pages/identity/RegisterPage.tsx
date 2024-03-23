@@ -1,11 +1,6 @@
 import { ChangeEvent, useRef } from "react";
-import { useLazyQuery } from "@apollo/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  CheckEmailAvailabilityDocument,
-  CheckUsernameAvailabilityDocument,
-} from "../../generted/graphql";
 import {
   useCheckEmailAvailability,
   useCheckUsernameAvailability,

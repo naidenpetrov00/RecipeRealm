@@ -19,10 +19,10 @@
 		}
 
 		public async Task<string> SendEmailWithResetToken(
-			string email,
-			[Service] IMailerSendService mailerService)
+			string emailToSend,
+			[Service] IMailService mailerService)
 		{
-			await mailerService.SendEmailWithRestoreToken(email);
+			mailerService.SendMailWithRestoreTokenAsync(emailToSend);
 		}
 	}
 }

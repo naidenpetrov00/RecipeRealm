@@ -7,7 +7,6 @@ const ForgotPassword = () => {
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const email = event.currentTarget.email.value;
   };
 
   return (

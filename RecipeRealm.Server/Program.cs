@@ -10,6 +10,8 @@ namespace RecipeRealm.Server
 	using FluentValidation.AspNetCore;
 	using AppAny.HotChocolate.FluentValidation;
 	using NuGet.Protocol;
+	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Services.Identity;
 
 	public class Program
 	{
@@ -34,10 +36,12 @@ namespace RecipeRealm.Server
 				.AddMutationType<Mutation>()
 				.AddFluentValidation();
 
+			builder.Services.AddTransient<IMailService, MailService>();
 			builder.Services.AddInterfacedServices();
 			builder.Services.AddHttpContextAccessor();
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 			var app = builder.Build();
 
