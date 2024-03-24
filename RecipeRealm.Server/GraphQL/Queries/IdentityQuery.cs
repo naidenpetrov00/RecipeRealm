@@ -17,12 +17,5 @@
 		{
 			return await userService.CheckForEmail(email);
 		}
-
-		public async Task<string> SendEmailWithResetToken(
-			string emailToSend,
-			[Service] IMailService mailerService)
-		{
-			mailerService.SendMailWithRestoreTokenAsync(emailToSend);
-		}
 	}
 }

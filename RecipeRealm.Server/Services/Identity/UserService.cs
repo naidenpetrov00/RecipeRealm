@@ -59,7 +59,7 @@
 				var jwtToken = jwtService.CreateToken(user);
 				return new LoginUserPayload()
 				{
-					User = user,	
+					User = user,
 					JwtToken = jwtToken
 				};
 			}
@@ -70,14 +70,15 @@
 		public async Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput)
 		{
 			var user = this.CreateUser(userInput);
-			var result = await userManager.CreateAsync(user,userInput.Password);
+			var result = await userManager.CreateAsync(user, userInput.Password);
 
 			if (result.Succeeded)
 			{
 				var jwtToken = jwtService.CreateToken(user);
 				return new RegisterUserPayload { User = user, JwtToken = jwtToken };
 			}
+
 			return new RegisterUserPayload { Errors = result.Errors };
-			}
+		}
 	}
 }

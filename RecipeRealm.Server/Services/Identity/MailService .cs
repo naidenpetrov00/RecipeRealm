@@ -4,70 +4,87 @@
 	using RecipeRealm.Server.Model;
 	using RecipeRealm.Server.Infrastructure;
 	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.Data.Models.Identity;
 
 	using MimeKit;
 	using MailKit.Net.Smtp;
 	using Microsoft.Extensions.Options;
-	using Azure.Identity;
-	using RecipeRealm.Server.Data;
-	using Microsoft.EntityFrameworkCore;
-	using NSubstitute.Routing.Handlers;
-	using RecipeRealm.Server.Data.Models.Identity;
+	using Microsoft.AspNetCore.Identity;
+	using RecipeRealm.Server.GraphQL.Identity;
+	using RecipeRealm.Server.Models;
 
 	public class MailService : IMailService
 	{
 		private readonly MailSettings _mailSettings;
-		private readonly RecipeRealmServerContext dbContext;
+		private readonly UserManager<RecipeRealmServerUser> userManager;
+		private readonly string wrongEmailErrorMessage = "Wrong email!";
 
 		public MailService(
 			IOptions<MailSettings> mailSettingsOptions,
-			RecipeRealmServerContext dbContext)
+			UserManager<RecipeRealmServerUser> userManager)
 		{
 			_mailSettings = mailSettingsOptions.Value;
-			this.dbContext = dbContext;
+			this.userManager = userManager;
 		}
 
-		public async Task<bool> SendMailWithRestoreTokenAsync(string emailToSend)
+		public async Task<ForgotPasswordPayload> SendMailWithRestoreTokenAsync(string emailToSend)
 		{
-			var user = GetUser(emailToSend);
-			user.passwor
-			try
+			var user = await this.userManager.FindByEmailAsync(emailToSend);
+			if (user != null)
 			{
-				var mailData = GetMailDataWithRestoreToken(user);
-				using var emailMessage = new MimeMessage();
-				var emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
-				emailMessage.From.Add(emailFrom);
-				var emailTo = new MailboxAddress(mailData.EmailToName, mailData.EmailToId);
-				emailMessage.To.Add(emailTo);
-
-				//emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "cc@example.com"));
-				//emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", "bcc@example.com"));
-
-				emailMessage.Subject = mailData.EmailSubject;
-
-				var emailBodyBuilder = new BodyBuilder
+				try
 				{
-					TextBody = mailData.EmailBody
-				};
+					var mailData = GetMailDataWithRestoreToken(user);
+					using var emailMessage = new MimeMessage();
+					var emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
+					emailMessage.From.Add(emailFrom);
+					var emailTo = new MailboxAddress(mailData.EmailToName, mailData.EmailToId);
+					emailMessage.To.Add(emailTo);
 
-				emailMessage.Body = emailBodyBuilder.ToMessageBody();
-				using var mailClient = new SmtpClient();
-				await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-				await mailClient.AuthenticateAsync(_mailSettings.UserName, _mailSettings.Password);
-				await mailClient.SendAsync(emailMessage);
-				await mailClient.DisconnectAsync(true);
+					//emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", "cc@example.com"));
+					//emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", "bcc@example.com"));
 
-				return true;
+					emailMessage.Subject = mailData.EmailSubject;
+
+					var emailBodyBuilder = new BodyBuilder
+					{
+						TextBody = mailData.EmailBody
+					};
+
+					emailMessage.Body = emailBodyBuilder.ToMessageBody();
+					using var mailClient = new SmtpClient();
+					await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+					await mailClient.AuthenticateAsync(_mailSettings.UserName, _mailSettings.Password);
+					await mailClient.SendAsync(emailMessage);
+					await mailClient.DisconnectAsync(true);
+
+					return new ForgotPasswordPayload
+					{
+						EmailSended = true,
+					};
+				}
+				catch (Exception ex)
+				{
+					return new ForgotPasswordPayload
+					{
+						EmailSended = false,
+						Error = ex.Message
+					};
+				}
 			}
-			catch (Exception)
+
+			return new ForgotPasswordPayload
 			{
-				return false;
-			}
-
+				EmailSended = false,
+				Error = this.wrongEmailErrorMessage
+			};
 		}
 
 		private MailData GetMailDataWithRestoreToken(RecipeRealmServerUser user)
 		{
+			var token = this.GenerateRestoreToken();
+
 			return new MailData
 			{
 				EmailToId = user.Email,
@@ -76,7 +93,9 @@
 				EmailBody = $@"Dear {user.UserName},
 				We received a request to reset the password associated with your account. If you initiated this request, please use the following temporary code to reset your password:
 
-				[Reset Token]
+				{token.Value}
+				
+				Valid for {token.ValidTo.Minutes} minutes.
 
 				This code is valid for a limited time. If you did not request a password reset, you can safely ignore this email.
 
@@ -85,10 +104,11 @@
 			};
 		}
 
-		private RecipeRealmServerUser? GetUser(string emailToSend)
+		private Token GenerateRestoreToken()
 		{
-			return this.dbContext.Users
-				.FirstOrDefault(u => u.Email == emailToSend);
+			Random random = new Random();
+			int randomNumber = random.Next(100000, 999999);
+			return new Token(randomNumber);
 		}
 	}
 }

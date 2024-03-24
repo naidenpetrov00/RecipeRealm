@@ -1,11 +1,11 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Mutations
 {
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.GraphQL.Identity;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	using AppAny.HotChocolate.FluentValidation;
+    using AppAny.HotChocolate.FluentValidation;
 
-	public abstract class IdentityMutation
+    public abstract class IdentityMutation
 	{
 		public async Task<RegisterUserPayload> RegisterUser(
 			[UseFluentValidation, UseValidator<RegisterUserInputValidator>] RegisterUserInput userInput,
@@ -19,6 +19,13 @@
 			[Service] IUserService userService)
 		{
 			return await userService.LoginUser(userInput);
+		}
+
+		public async Task<ForgotPasswordPayload> ForgotPassword(
+			ForgotPasswordInput userInput,
+			[Service] IMailService mailerService)
+		{
+			return await mailerService.SendMailWithRestoreTokenAsync(userInput.Email);
 		}
 	}
 }

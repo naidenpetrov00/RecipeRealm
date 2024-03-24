@@ -1,9 +1,12 @@
 ﻿namespace RecipeRealm.Server.Services.Interfaces
 {
+	using RecipeRealm.Server.Common;
+	using RecipeRealm.Server.Data.Models.Identity;
+	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Model;
 
-	public interface IMailService
+	public interface IMailService : IService
 	{
-		Task<bool> SendMailWithRestoreTokenAsync(string emailToSend);
+		Task<ForgotPasswordPayload> SendMailWithRestoreTokenAsync(string emailToSend);
 	}
 }
