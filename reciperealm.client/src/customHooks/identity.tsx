@@ -8,6 +8,8 @@ import {
   CheckEmailAvailabilityQuery,
   CheckUsernameAvailabilityDocument,
   CheckUsernameAvailabilityQuery,
+  ForgotPasswordDocument,
+  ForgotPasswordPayload,
   LoginUserDocument,
   RegisterUserDocument,
 } from "../generted/graphql";
@@ -18,6 +20,37 @@ import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 export const useAppSelector = useSelector.withTypes<RootState>();
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+
+interface ForgotPasswordHandlerResult {
+  forgotPasswordHandler: (email: string) => Promise<ForgotPasswordPayload>;
+}
+export const useForgotPassword = (): ForgotPasswordHandlerResult => {
+  const [forgotPasswordMutation] = useMutation(ForgotPasswordDocument);
+
+  const forgotPasswordHandler = async (email: string) => {
+    const result = await forgotPasswordMutation({
+      variables: { userInput: { email } },
+      onError: onErrorHandler,
+    });
+    const resultPayload = result.data?.forgotPassword;
+
+    if (!resultPayload) {
+      const defaultPayload: ForgotPasswordPayload = {
+        emailSent: false,
+        error: "No response received from server.",
+      };
+      alert(defaultPayload.error);
+      return defaultPayload;
+    }
+    if (!resultPayload?.emailSent && resultPayload!.error.length > 0) {
+      alert(resultPayload?.error);
+    }
+
+    return resultPayload;
+  };
+
+  return { forgotPasswordHandler };
+};
 
 interface LoginHandlerResult {
   loginHandler: (email: string, password: string) => Promise<void>;

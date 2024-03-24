@@ -25,3 +25,10 @@ mutation LoginUser($userInput: LoginUserInput!) {
     }
   }
 }
+
+mutation ForgotPassword($userInput: ForgotPasswordInput!) {
+  forgotPassword(userInput: $userInput) {
+    emailSent
+    error
+  }
+}
