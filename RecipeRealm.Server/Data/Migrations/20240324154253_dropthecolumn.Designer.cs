@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeRealm.Server.Data;
 
@@ -11,9 +12,11 @@ using RecipeRealm.Server.Data;
 namespace RecipeRealm.Server.Migrations
 {
     [DbContext(typeof(RecipeRealmServerContext))]
-    partial class RecipeRealmServerContextModelSnapshot : ModelSnapshot
+    [Migration("20240324154253_dropthecolumn")]
+    partial class dropthecolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,9 +197,6 @@ namespace RecipeRealm.Server.Migrations
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PasswordRestoreToken")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("PasswordRestoreValidUntil")
                         .HasColumnType("datetime2");

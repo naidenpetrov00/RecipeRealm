@@ -1,5 +1,6 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Queries
 {
+	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Services.Interfaces;
 
 	public abstract class IdentityQuery
@@ -16,6 +17,13 @@
 			[Service] IUserService userService)
 		{
 			return await userService.CheckForEmail(email);
+		}
+
+		public async Task<bool> ValidateToken(
+			ValidateTokenInput userInput,
+			[Service] IValidateResetTokenService validateResetToken)
+		{
+			return await validateResetToken.CheckTokenValidity(userInput);
 		}
 	}
 }

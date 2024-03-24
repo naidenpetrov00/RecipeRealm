@@ -4,21 +4,21 @@
 	using RecipeRealm.Server.Model;
 	using RecipeRealm.Server.Infrastructure;
 	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.Data.Models.Identity;
 
 	using MimeKit;
 	using MailKit.Net.Smtp;
 	using Microsoft.Extensions.Options;
 	using Microsoft.AspNetCore.Identity;
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Models;
+	using RecipeRealm.Server.Services.Exceptions;
 
 	public class MailService : IMailService
 	{
 		private readonly MailSettings _mailSettings;
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly string wrongEmailErrorMessage = "Wrong email!";
+		private readonly int restoreTokenTimeSpan = 15;
 
 		public MailService(
 			IOptions<MailSettings> mailSettingsOptions,
@@ -35,7 +35,8 @@
 			{
 				try
 				{
-					var mailData = GetMailDataWithRestoreToken(user);
+					var token = this.GenerateRestoreToken();
+					var mailData = GetMailDataWithRestoreToken(user, token);
 					using var emailMessage = new MimeMessage();
 					var emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
 					emailMessage.From.Add(emailFrom);
@@ -59,16 +60,18 @@
 					await mailClient.SendAsync(emailMessage);
 					await mailClient.DisconnectAsync(true);
 
+					await this.UpdateUserRestoreToken(user, token);
+
 					return new ForgotPasswordPayload
 					{
-						EmailSended = true,
+						EmailSent = true,
 					};
 				}
 				catch (Exception ex)
 				{
 					return new ForgotPasswordPayload
 					{
-						EmailSended = false,
+						EmailSent = false,
 						Error = ex.Message
 					};
 				}
@@ -76,26 +79,36 @@
 
 			return new ForgotPasswordPayload
 			{
-				EmailSended = false,
+				EmailSent = false,
 				Error = this.wrongEmailErrorMessage
 			};
 		}
 
-		private MailData GetMailDataWithRestoreToken(RecipeRealmServerUser user)
+		private async Task UpdateUserRestoreToken(RecipeRealmServerUser user, RestoreToken token)
 		{
-			var token = this.GenerateRestoreToken();
+			user.PasswordRestoreToken = token.Value;
+			user.PasswordRestoreValidUntil = token.ValidUntil;
+			var result = await this.userManager.UpdateAsync(user);
+			if (!result.Succeeded)
+			{
+				throw new RestoreTokenNotAdded();
+			}
+		}
+
+		private MailData GetMailDataWithRestoreToken(RecipeRealmServerUser user, RestoreToken token)
+		{
 
 			return new MailData
 			{
-				EmailToId = user.Email,
-				EmailToName = user.UserName,
+				EmailToId = user.Email!,
+				EmailToName = user.UserName!,
 				EmailSubject = "Password Reset Request",
 				EmailBody = $@"Dear {user.UserName},
 				We received a request to reset the password associated with your account. If you initiated this request, please use the following temporary code to reset your password:
 
 				{token.Value}
 				
-				Valid for {token.ValidTo.Minutes} minutes.
+				Valid for {this.restoreTokenTimeSpan} minutes.
 
 				This code is valid for a limited time. If you did not request a password reset, you can safely ignore this email.
 
@@ -104,11 +117,15 @@
 			};
 		}
 
-		private Token GenerateRestoreToken()
+		private RestoreToken GenerateRestoreToken()
 		{
-			Random random = new Random();
+			var random = new Random();
 			int randomNumber = random.Next(100000, 999999);
-			return new Token(randomNumber);
+			return new RestoreToken
+			{
+				Value = randomNumber,
+				ValidUntil = DateTime.UtcNow.AddMinutes(this.restoreTokenTimeSpan)
+			};
 		}
 	}
 }
