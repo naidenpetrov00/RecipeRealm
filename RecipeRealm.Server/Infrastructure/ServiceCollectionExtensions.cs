@@ -20,6 +20,7 @@
 
 			services.AddTransient<LoginUserInputValidator>();
 			services.AddTransient<RegisterUserInputValidator>();
+			services.AddTransient<ChangePasswordInputvalidator>();
 
 			return services;
 		}

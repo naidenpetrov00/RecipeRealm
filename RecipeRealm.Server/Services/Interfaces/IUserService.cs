@@ -6,14 +6,16 @@
 
 	public interface IUserService : IService
 	{
-		public Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput);
+		Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput);
 
-		public Task<LoginUserPayload> LoginUser(LoginUserInput userInput);
+		Task<LoginUserPayload> LoginUser(LoginUserInput userInput);
 
-		public RecipeRealmServerUser CreateUser(RegisterUserInput userInput);
+		RecipeRealmServerUser CreateUser(RegisterUserInput userInput);
 
-		public Task<bool> CheckForUsername(string username);
+		Task<bool> CheckForUsername(string username);
 
-		public Task<bool> CheckForEmail(string email);
+		Task<bool> CheckForEmail(string email);
+
+		Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput);
 	}
 }

@@ -63,8 +63,7 @@ namespace RecipeRealm.Server
 			app.UseCors(o => o
 			 .AllowAnyHeader()
 			 .AllowAnyMethod()
-			 .AllowAnyOrigin());
-			// .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!));
+			 .WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[]>()!));
 			app.UseHttpsRedirection();
 			app.UseAuthentication();
 			app.UseAuthorization();

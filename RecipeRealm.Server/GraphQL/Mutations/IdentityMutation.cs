@@ -27,5 +27,12 @@
 		{
 			return await mailerService.SendMailWithRestoreTokenAsync(userInput.Email);
 		}
+
+		public async Task<ChangePasswordPayload> ChangePassword(
+			ChangePasswordInput userInput,
+			[Service] IUserService userService)
+		{
+			return await userService.ChangePassword(userInput);
+		}
 	}
 }

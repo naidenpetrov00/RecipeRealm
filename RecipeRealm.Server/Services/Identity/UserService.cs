@@ -80,5 +80,29 @@
 
 			return new RegisterUserPayload { Errors = result.Errors };
 		}
+
+		public async Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput)
+		{
+			var user = await this.userManager.FindByEmailAsync(userInput.Email);
+			if (user == null)
+			{
+				return new ChangePasswordPayload
+				{
+					PasswordChanged = false,
+					Errors = new[] { new UserNotFoundException() }
+				};
+			}
+			var token = await userManager.GeneratePasswordResetTokenAsync(user);
+			var result = await userManager.ResetPasswordAsync(user, token, userInput.NewPassword);
+			if (result.Succeeded)
+			{
+				return new ChangePasswordPayload { PasswordChanged = true, };
+			}
+			return new ChangePasswordPayload
+			{
+				PasswordChanged = false,
+				Errors = result.Errors
+			};
+		}
 	}
 }
