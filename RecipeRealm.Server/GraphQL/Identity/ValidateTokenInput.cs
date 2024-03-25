@@ -1,6 +1,6 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Identity
 {
-	public record ValidateTokenInput(int Token, string Email)
+	public record ValidateTokenInput(string Token, string Email)
 	{
 	}
 }

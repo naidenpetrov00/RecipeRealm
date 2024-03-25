@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
-import { useAppDispatch } from "../../customHooks/identity";
+import { useAppDispatch } from "../../customHooks/helpers";
 import { authenticated } from "../../store/authSlice";
 
 const LogoutButon = () => {

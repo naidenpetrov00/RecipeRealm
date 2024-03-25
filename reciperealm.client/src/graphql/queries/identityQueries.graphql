@@ -5,3 +5,7 @@ query CheckUsernameAvailability($username: String!) {
 query CheckEmailAvailability($email: String!) {
   checkEmailAvailability(email: $email)
 }
+
+query ValidateToken($token: String!, $email: String!) {
+  validateToken(userInput: { token: $token, email: $email })
+}

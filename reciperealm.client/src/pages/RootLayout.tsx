@@ -4,7 +4,7 @@ import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 import { authenticated } from "../store/authSlice";
 import NavBar from "../components/NavBar/NavBar";
-import { useAppDispatch } from "../customHooks/identity";
+import { useAppDispatch } from "../customHooks/helpers";
 
 const RootLayout = () => {
   const isAuthCookie = useIsAuthenticated();

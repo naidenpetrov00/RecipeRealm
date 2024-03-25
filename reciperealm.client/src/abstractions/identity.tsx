@@ -8,6 +8,11 @@ export interface IUserRegisterValues extends IUserLoginValues {
   confirmPassword: string;
 }
 
+export interface IChangePasswordValues {
+  password: string;
+  confirmPassword: string;
+}
+
 export enum InvalidInputErrorMessges {
   InvalidEmail = "Provide valid email!",
   EmptyInput = "This is required!",

@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { FormEvent, useState } from "react";
-import { useForgotPassword } from "../../customHooks/identity";
-import PasswordResetTokenSender from "../../components/identity/PasswordResetTokenSender";
+
 import VerifyToken from "../../components/identity/VerifyToken";
+import PasswordResetTokenSender from "../../components/identity/PasswordResetTokenSender";
+import { useForgotPassword } from "../../customHooks/identity/useForgotPassword";
 
 const ForgotPassword = () => {
-  const [emailSent, setEmailSent] = useState<boolean>(false);
+  const [emailSent, setEmailSent] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const { forgotPasswordHandler } = useForgotPassword();
 
@@ -30,17 +31,7 @@ const ForgotPassword = () => {
             {emailSent && <VerifyToken email={email} />}
           </div>
         </div>
-        <div className="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-center mt-4">
-          <NavLink to="/login" className="link-secondary text-decoration-none">
-            Login
-          </NavLink>
-          <NavLink
-            to="/register"
-            className="link-secondary text-decoration-none"
-          >
-            Register
-          </NavLink>
-        </div>
+        
       </div>
     </section>
   );

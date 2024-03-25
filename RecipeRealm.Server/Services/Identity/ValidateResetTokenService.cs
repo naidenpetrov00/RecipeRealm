@@ -20,7 +20,7 @@
 			var user = await this.userManager.FindByEmailAsync(userInput.Email);
 			if (user == null) { return false; }
 
-			if (user.PasswordRestoreToken != null && userInput.Token == user.PasswordRestoreToken)
+			if (user.PasswordRestoreToken != null && userInput.Token == user.PasswordRestoreToken.ToString())
 			{
 				var currentTime = DateTime.UtcNow;
 

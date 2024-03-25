@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../../customHooks/identity";
+import { useAppSelector } from "../../customHooks/helpers";
 
 import SearchForm from "./SearchForm";
 import LogoutButon from "./LogoutButton";

@@ -9,7 +9,7 @@ import {
   InvalidInputErrorMessges,
   InvalidInputErrorTypes,
 } from "../../../abstractions/identity";
-import { useLoginUser } from "../../../customHooks/identity";
+import { useLoginUser } from "../../../customHooks/identity/useLoginUser";
 
 const urlToHome = "http://localhost";
 const urlToLogin = "http://localhost/login";
@@ -27,7 +27,7 @@ Object.defineProperty(window.location, "origin", {
   writable: true,
 });
 
-jest.mock("../../../customHooks/identity");
+jest.mock("../../../customHooks/identity/useLoginUser");
 const useLoginUserMocked = useLoginUser as jest.Mock;
 useLoginUserMocked.mockReturnValue({
   loginHandler: jest.fn(() => {

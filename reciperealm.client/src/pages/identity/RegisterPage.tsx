@@ -1,20 +1,18 @@
 import { ChangeEvent, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  useCheckEmailAvailability,
-  useCheckUsernameAvailability,
-  useRegisterUser,
-} from "../../customHooks/identity";
 import {
   IUserRegisterValues,
   InvalidInputErrorMessges,
 } from "../../abstractions/identity";
 import { NavLink } from "react-router-dom";
 import ReCaptcha from "../../components/ReCaptcha";
+import { useRegisterUser } from "../../customHooks/identity/useRegisterUser";
+import { useCheckEmailAvailability } from "../../customHooks/identity/useCheckEmailAvailability";
+import { useCheckUsernameAvailability } from "../../customHooks/identity/useCheckUsernameAvailability";
 
 import styles from "./LoginPage.module.css";
-import ReCAPTCHA from "react-google-recaptcha";
 
 const RegisterPage = () => {
   const {

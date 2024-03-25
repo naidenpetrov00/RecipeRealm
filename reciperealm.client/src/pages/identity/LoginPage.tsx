@@ -8,7 +8,7 @@ import {
   InvalidInputErrorMessges,
 } from "../../abstractions/identity";
 import ReCaptcha from "../../components/ReCaptcha";
-import { useLoginUser } from "../../customHooks/identity";
+import { useLoginUser } from "../../customHooks/identity/useLoginUser";
 
 import styles from "./LoginPage.module.css";
 
