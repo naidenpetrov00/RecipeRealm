@@ -12,3 +12,8 @@ type LoginUserInput {
 type ForgotPasswordInput {
   email: String!
 }
+
+type ChangePasswordInput {
+  email: String!
+  newPassword: String!
+}

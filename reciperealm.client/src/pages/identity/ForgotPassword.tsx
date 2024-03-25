@@ -1,19 +1,22 @@
 import { NavLink } from "react-router-dom";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import VerifyToken from "../../components/identity/VerifyToken";
 import PasswordResetTokenSender from "../../components/identity/PasswordResetTokenSender";
 import { useForgotPassword } from "../../customHooks/identity/useForgotPassword";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const ForgotPassword = () => {
   const [emailSent, setEmailSent] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const { forgotPasswordHandler } = useForgotPassword();
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
 
   const onEmailCodeSubmitHandler = async (
     event: FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    reCaptchaRef.current?.execute();
     const email = event.currentTarget.email.value;
     setEmail(email);
     var result = await forgotPasswordHandler(email);
@@ -26,12 +29,14 @@ const ForgotPassword = () => {
         <div className="row justify-content-center">
           <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
             {!emailSent && (
-              <PasswordResetTokenSender onSubmit={onEmailCodeSubmitHandler} />
+              <PasswordResetTokenSender
+                onSubmit={onEmailCodeSubmitHandler}
+                reCaptchaRef={reCaptchaRef}
+              />
             )}
             {emailSent && <VerifyToken email={email} />}
           </div>
         </div>
-        
       </div>
     </section>
   );

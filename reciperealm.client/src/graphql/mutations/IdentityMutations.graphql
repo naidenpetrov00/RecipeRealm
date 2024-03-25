@@ -32,3 +32,13 @@ mutation ForgotPassword($userInput: ForgotPasswordInput!) {
     error
   }
 }
+
+mutation ChangePassword($userInput: ChangePasswordInput!) {
+  changePassword(userInput: $userInput) {
+    passwordChanged
+    errors {
+      code
+      description
+    }
+  }
+}

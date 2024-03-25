@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   IChangePasswordValues,
   InvalidInputErrorMessges,
@@ -13,6 +13,7 @@ interface ChangePasswordProps {
 const ChangePassword: FC<ChangePasswordProps> = ({ emailOnChangingUser }) => {
   const {
     register,
+    handleSubmit,
     formState: { errors },
     watch,
   } = useForm<IChangePasswordValues>({
@@ -20,8 +21,15 @@ const ChangePassword: FC<ChangePasswordProps> = ({ emailOnChangingUser }) => {
     reValidateMode: "onBlur",
   });
 
+  const onChangePasswordHandler: SubmitHandler<IChangePasswordValues> = (
+    data
+  ) => {};
+
   return (
-    <form className={styles.form}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit(onChangePasswordHandler)}
+    >
       <h1 className={styles.pageInfo}>Change Password</h1>
       <div className={"form-outline mb-4 " + styles.outline}>
         {errors.password && (

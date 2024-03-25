@@ -1,16 +1,17 @@
-import { FC, FormEvent, Fragment, useRef } from "react";
+import { FC, FormEvent, Fragment, RefObject, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import ReCaptcha from "../ReCaptcha";
+import { NavLink } from "react-router-dom";
 
 interface PasswordResetTokenSenderProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  reCaptchaRef: RefObject<ReCAPTCHA>;
 }
 
 const PasswordResetTokenSender: FC<PasswordResetTokenSenderProps> = ({
   onSubmit,
+  reCaptchaRef,
 }) => {
-  const reCaptchaRef = useRef<ReCAPTCHA>(null);
-
   return (
     <Fragment>
       <div className="mb-5">
