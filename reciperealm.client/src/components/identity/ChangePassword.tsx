@@ -5,7 +5,8 @@ import {
 } from "../../abstractions/identity";
 
 import styles from "./ChangePassword.module.css";
-import { FC } from "react";
+import { FC, useState } from "react";
+import { useChangePassword } from "../../customHooks/identity/useChangePassword";
 
 interface ChangePasswordProps {
   emailOnChangingUser: string;
@@ -21,9 +22,12 @@ const ChangePassword: FC<ChangePasswordProps> = ({ emailOnChangingUser }) => {
     reValidateMode: "onBlur",
   });
 
-  const onChangePasswordHandler: SubmitHandler<IChangePasswordValues> = (
+  const { changePassword } = useChangePassword();
+  const onChangePasswordHandler: SubmitHandler<IChangePasswordValues> = async (
     data
-  ) => {};
+  ) => {
+    await changePassword(emailOnChangingUser, data.password);
+  };
 
   return (
     <form

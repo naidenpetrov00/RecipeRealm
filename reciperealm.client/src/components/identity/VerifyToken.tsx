@@ -10,7 +10,7 @@ interface VerifyTokenProps {
 const VerifyToken: FC<VerifyTokenProps> = ({ email }) => {
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
   const [invalidToken, setInvalidToken] = useState<boolean>(false);
-  const [showChangePassword, setShowChangePassword] = useState<boolean>(true);
+  const [showChangePassword, setShowChangePassword] = useState<boolean>(false);
 
   const { checkToken } = useValidateToken();
   const onSubmitTokenHandler = async (event: FormEvent<HTMLFormElement>) => {

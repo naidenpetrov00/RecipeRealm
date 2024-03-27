@@ -7,7 +7,7 @@ import { useForgotPassword } from "../../customHooks/identity/useForgotPassword"
 import ReCAPTCHA from "react-google-recaptcha";
 
 const ForgotPassword = () => {
-  const [emailSent, setEmailSent] = useState<boolean>(true);
+  const [emailSent, setEmailSent] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const { forgotPasswordHandler } = useForgotPassword();
   const reCaptchaRef = useRef<ReCAPTCHA>(null);
