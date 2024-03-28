@@ -7,12 +7,17 @@ import LogoutButon from "./LogoutButton";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { IUserLoginValues } from "../../abstractions/identity";
 
+import styles from "./NavBar.module.css";
+import defaultProfilePicture from "../../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
+
 const NavBar = () => {
   const isAuthenticated = useAppSelector((state) => state.auth.value);
   const auth = useAuthUser<IUserLoginValues>();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav
+      className={styles.nav + " navbar navbar-expand-lg navbar-dark bg-dark"}
+    >
       <NavLink className="navbar-brand" to="/">
         RecipeRealm
       </NavLink>
@@ -37,6 +42,15 @@ const NavBar = () => {
           </li>
           {isAuthenticated ? (
             <Fragment>
+              <li>
+                <NavLink to="/myaccount">
+                  <img
+                    src={defaultProfilePicture}
+                    alt="profile picture"
+                    className={"profile-pic " + styles.profilePic}
+                  ></img>
+                </NavLink>
+              </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/myaccount">
                   {auth?.username || "MyProfile"}
