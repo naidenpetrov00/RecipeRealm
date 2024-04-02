@@ -1,0 +1,16 @@
+.cropContainer {
+  margin: 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  z-index: 10;
+}
+
+.button {
+  position: absolute;
+  bottom: 0%;
+  right: 0%;
+  width: 200px;
+}
