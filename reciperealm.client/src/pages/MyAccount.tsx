@@ -1,6 +1,5 @@
 import defaultProfilePicture from "../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import AvatarEditor from "react-avatar-editor";
 
 import "./MyAccount.css";
 import { IUserLoginValues } from "../abstractions/identity";
@@ -12,18 +11,25 @@ const MyAccount = () => {
   const [showChangeButton, setShowChangeButton] = useState<boolean>(false);
   const user = useAuthUser<IUserLoginValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showCropper, setShowCropper] = useState<boolean>();
+  const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer | null>(
+    null
+  );
+  console.log("from myacc");
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    setSelectedFile(file || null);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener("load", () => {
+      setShowCropper(true);
+      setSelectedFile(reader.result);
+    });
   };
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
-  console.log("from MyAccount");
-
 
   const handleUpload = () => {
     console.log("Selected File:", selectedFile);
@@ -31,7 +37,13 @@ const MyAccount = () => {
 
   return (
     <Fragment>
-      {selectedFile && <ImageCropper image={selectedFile} />}
+      {showCropper && (
+        <ImageCropper
+          image={selectedFile}
+          setImage={setSelectedFile}
+          setShowCropper={setShowCropper}
+        />
+      )}
       <section className="profile">
         <header className="header">
           <div className="details">
@@ -59,7 +71,7 @@ const MyAccount = () => {
                 </div>
               )}
               <img
-                src={defaultProfilePicture}
+                src={selectedFile || defaultProfilePicture}
                 alt="profile-picture"
                 className="profile-pic"
               />
