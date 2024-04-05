@@ -17,5 +17,7 @@
 		Task<bool> CheckForEmail(string email);
 
 		Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput);
+
+		Task<ChangeProfilePicturePayload> ChangeProfilePicture(ChangeProfilePictureInput userInput);
 	}
 }

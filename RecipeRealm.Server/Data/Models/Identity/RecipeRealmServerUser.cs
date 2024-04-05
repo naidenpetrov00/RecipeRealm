@@ -7,5 +7,7 @@
 		public int? PasswordRestoreToken { get; set; }
 
 		public DateTime PasswordRestoreValidUntil { get; set; }
+
+		public byte[]? ProfilePicture { get; set; }
 	}
 }

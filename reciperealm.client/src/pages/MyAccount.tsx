@@ -4,7 +4,6 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import "./MyAccount.css";
 import { IUserLoginValues } from "../abstractions/identity";
 import { ChangeEvent, Fragment, useRef, useState } from "react";
-import Cropper, { Area } from "react-easy-crop";
 import ImageCropper from "../components/MyAccount/ImageCropper";
 
 const MyAccount = () => {
@@ -15,12 +14,14 @@ const MyAccount = () => {
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer | null>(
     null
   );
-  console.log("from myacc");
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    if (file === undefined || file === null) {
+      alert("Cannot find file");
+    }
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file!);
     reader.addEventListener("load", () => {
       setShowCropper(true);
       setSelectedFile(reader.result);
@@ -29,10 +30,6 @@ const MyAccount = () => {
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
-  };
-
-  const handleUpload = () => {
-    console.log("Selected File:", selectedFile);
   };
 
   return (

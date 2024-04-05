@@ -34,5 +34,12 @@
 		{
 			return await userService.ChangePassword(userInput);
 		}
+
+		public async Task<ChangeProfilePicturePayload> ChangePicture(
+			ChangeProfilePictureInput userInput,
+			[Service] IUserService)
+		{
+
+		}
 	}
 }

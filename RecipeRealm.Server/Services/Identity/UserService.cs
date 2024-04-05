@@ -47,7 +47,7 @@
 
 		public async Task<LoginUserPayload> LoginUser(LoginUserInput userInput)
 		{
-			var user = await userManager.FindByEmailAsync(userInput.Email);
+			var user = await GetUserByEmailAsync(userInput.Email);
 			if (user == null)
 			{
 				return new LoginUserPayload { Error = new UserNotFoundException() };
@@ -83,7 +83,7 @@
 
 		public async Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput)
 		{
-			var user = await this.userManager.FindByEmailAsync(userInput.Email);
+			var user = await this.GetUserByEmailAsync(userInput.Email);
 			if (user == null)
 			{
 				return new ChangePasswordPayload
@@ -103,6 +103,33 @@
 				PasswordChanged = false,
 				Errors = result.Errors
 			};
+		}
+
+		public async Task<ChangeProfilePicturePayload> ChangeProfilePicture(ChangeProfilePictureInput userInput)
+		{
+			var user = await this.GetUserByEmailAsync(userInput.Email);
+			if (user == null)
+			{
+				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
+			}
+
+			var imageBytes = Convert.FromBase64String(userInput.Base64Image);
+			user.ProfilePicture = imageBytes;
+			var result = await this.userManager.UpdateAsync(user);
+			if (result.Succeeded)
+			{
+				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
+			}
+			return new ChangeProfilePicturePayload
+			{
+				ProfilePictureChanged = false,
+				Errors = result.Errors
+			};
+		}
+
+		private async Task<RecipeRealmServerUser?> GetUserByEmailAsync(string email)
+		{
+			return await this.userManager.FindByEmailAsync(email);
 		}
 	}
 }

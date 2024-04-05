@@ -21,6 +21,7 @@
 			services.AddTransient<LoginUserInputValidator>();
 			services.AddTransient<RegisterUserInputValidator>();
 			services.AddTransient<ChangePasswordInputvalidator>();
+			services.AddTransient<ChangeProfilePictureValidator>();
 
 			return services;
 		}
