@@ -11,6 +11,7 @@
 
 	public class UserService : IUserService
 	{
+		private readonly string dataUriPrefix = "data:image/jpeg;base64,";
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly IJwtService jwtService;
 		private readonly RecipeRealmServerContext dbContext;
@@ -112,9 +113,13 @@
 			{
 				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
 			}
+			var base64WithoutPrefix = userInput.Base64Image.Replace(this.dataUriPrefix, String.Empty);
+			var imageBytes = Convert.FromBase64String(base64WithoutPrefix);
 
-			var imageBytes = Convert.FromBase64String(userInput.Base64Image);
 			user.ProfilePicture = imageBytes;
+			byte[] ImageBytes = user.ProfilePicture;
+			string base64String = this.dataUriPrefix + Convert.ToBase64String(ImageBytes);
+
 			var result = await this.userManager.UpdateAsync(user);
 			if (result.Succeeded)
 			{

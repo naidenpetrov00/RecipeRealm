@@ -37,9 +37,9 @@
 
 		public async Task<ChangeProfilePicturePayload> ChangePicture(
 			ChangeProfilePictureInput userInput,
-			[Service] IUserService)
+			[Service] IUserService userService)
 		{
-
+			return await userService.ChangeProfilePicture(userInput);
 		}
 	}
 }

@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useMemo, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
 
 import styles from "./ImageCropper.module.css";
-import getCroppedImg, { generateCroppedImage } from "./canvasUtils";
+import { generateCroppedImage } from "./canvasUtils";
 
 interface ImageCopperResult {
   image: string | ArrayBuffer | null;
@@ -18,15 +18,13 @@ const ImageCropper: FC<ImageCopperResult> = ({
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<Area>();
 
-  const onCropComplete = (croppedAreaPixels: Area) => {
+  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
   };
 
   const onSetImageHandler = async () => {
     const img = await generateCroppedImage(image, croppedArea);
-    console.log(typeof img);
     console.log(img);
-
     setImage(img);
     setShowCropper(false);
   };

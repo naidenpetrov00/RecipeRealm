@@ -2,7 +2,7 @@
 
 namespace RecipeRealm.Server.GraphQL.Identity
 {
-	public record ChangeProfilePictureInput(string Base64Image, string Email)
+	public record ChangeProfilePictureInput(string Email, string Base64Image)
 	{
 	}
 
@@ -10,13 +10,14 @@ namespace RecipeRealm.Server.GraphQL.Identity
 	{
 		public ChangeProfilePictureValidator()
 		{
+			RuleFor(i => i.Email)
+					  .NotEmpty()
+					  .EmailAddress();
+
 			RuleFor(pp => pp.Base64Image)
 				.NotEmpty()
 				.NotNull();
 
-			RuleFor(i => i.Email)
-					  .NotEmpty()
-					  .EmailAddress();
 		}
 	}
 }
