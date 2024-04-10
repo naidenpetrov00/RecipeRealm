@@ -14,6 +14,7 @@ namespace RecipeRealm.Server
 	using RecipeRealm.Server.Services.Identity;
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.Extensions.Options;
+	using System.Reflection;
 
 	public class Program
 	{
@@ -30,6 +31,7 @@ namespace RecipeRealm.Server
 			builder.Services.AddAuthorization();
 			builder.Services.AddLogging();
 			builder.Services.AddDbContext<RecipeRealmServerContext>(options => options.UseSqlServer(connectionString));
+			builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 			builder.Services
 				.AddGraphQLServer()

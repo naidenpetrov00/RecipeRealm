@@ -5,25 +5,31 @@
 	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.Data.Models.Identity;
 	using RecipeRealm.Server.Data.Exceptions.Identity;
+	using RecipeRealm.Server.Models.Identity;
 
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.EntityFrameworkCore;
+	using AutoMapper;
 
 	public class UserService : IUserService
 	{
-		private readonly string dataUriPrefix = "data:image/jpeg;base64,";
 		private readonly UserManager<RecipeRealmServerUser> userManager;
+		private readonly IParseProfilePicture pictureParserService;
 		private readonly IJwtService jwtService;
+		private readonly IMapper mapper;
 		private readonly RecipeRealmServerContext dbContext;
 
 		public UserService(
 			UserManager<RecipeRealmServerUser> userManager,
+			IParseProfilePicture pictureParserService,
 			IJwtService jwtService,
+			IMapper mapper,
 			RecipeRealmServerContext dbContext)
 		{
 			this.userManager = userManager;
+			this.pictureParserService = pictureParserService;
 			this.jwtService = jwtService;
-
+			this.mapper = mapper;
 			this.dbContext = dbContext;
 		}
 
@@ -57,14 +63,14 @@
 			var result = await userManager.CheckPasswordAsync(user, userInput.Password);
 			if (result)
 			{
+				var loginUserModel = this.mapper.Map<LoginUserModel>(user);
 				var jwtToken = jwtService.CreateToken(user);
 				return new LoginUserPayload()
 				{
-					User = user,
+					User = loginUserModel,
 					JwtToken = jwtToken
 				};
 			}
-
 			return new LoginUserPayload { Error = new UserNotFoundException() };
 		}
 
@@ -75,8 +81,9 @@
 
 			if (result.Succeeded)
 			{
+				var registerUser = this.mapper.Map<RegisterUserModel>(user);
 				var jwtToken = jwtService.CreateToken(user);
-				return new RegisterUserPayload { User = user, JwtToken = jwtToken };
+				return new RegisterUserPayload { User = registerUser, JwtToken = jwtToken };
 			}
 
 			return new RegisterUserPayload { Errors = result.Errors };
@@ -113,12 +120,11 @@
 			{
 				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
 			}
-			var base64WithoutPrefix = userInput.Base64Image.Replace(this.dataUriPrefix, String.Empty);
-			var imageBytes = Convert.FromBase64String(base64WithoutPrefix);
-
+			var imageBytes = this.pictureParserService.ForDB(userInput.Base64Image);
 			user.ProfilePicture = imageBytes;
-			byte[] ImageBytes = user.ProfilePicture;
-			string base64String = this.dataUriPrefix + Convert.ToBase64String(ImageBytes);
+
+			//byte[] ImageBytes = user.ProfilePicture;
+			//string base64String = this.dataUriPrefix + Convert.ToBase64String(ImageBytes);
 
 			var result = await this.userManager.UpdateAsync(user);
 			if (result.Succeeded)
