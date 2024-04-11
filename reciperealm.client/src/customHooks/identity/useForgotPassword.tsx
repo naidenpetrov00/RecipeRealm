@@ -6,7 +6,6 @@ import {
 } from "../../generted/graphql";
 import { onErrorHandler } from "../helpers";
 
-
 interface ForgotPasswordHandlerResult {
   forgotPasswordHandler: (email: string) => Promise<ForgotPasswordPayload>;
 }

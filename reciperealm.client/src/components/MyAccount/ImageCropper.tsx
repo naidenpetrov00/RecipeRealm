@@ -3,6 +3,9 @@ import Cropper, { Area } from "react-easy-crop";
 
 import styles from "./ImageCropper.module.css";
 import { generateCroppedImage } from "./canvasUtils";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { IUserLoginValues } from "../../abstractions/identity";
+import { useChangeProfilePicture } from "../../customHooks/identity/useChangeProgilePicture";
 
 interface ImageCopperResult {
   image: string | ArrayBuffer | null;
@@ -22,9 +25,15 @@ const ImageCropper: FC<ImageCopperResult> = ({
     setCroppedArea(croppedAreaPixels);
   };
 
+  const userData = useAuthUser<IUserLoginValues>();
+  const { changePicture } = useChangeProfilePicture();
   const onSetImageHandler = async () => {
     const img = await generateCroppedImage(image, croppedArea);
-    console.log(img);
+    if (img === null) {
+      alert("Please crop again");
+      return;
+    }
+    await changePicture(userData!.email, img);
     setImage(img);
     setShowCropper(false);
   };

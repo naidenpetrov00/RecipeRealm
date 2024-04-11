@@ -42,3 +42,13 @@ mutation ChangePassword($userInput: ChangePasswordInput!) {
     }
   }
 }
+
+mutation ChangePicture($userInput: ChangeProfilePictureInput!) {
+  changePicture(userInput: $userInput) {
+    profilePictureChanged
+    errors {
+      code
+      description
+    }
+  }
+}

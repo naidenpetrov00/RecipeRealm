@@ -17,3 +17,8 @@ type ChangePasswordInput {
   email: String!
   newPassword: String!
 }
+
+type ChangeProfilePictureInput {
+  email: String!
+  base64Image: String!
+}

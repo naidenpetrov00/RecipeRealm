@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import { FormEvent, useRef, useState } from "react";
 
 import VerifyToken from "../../components/identity/VerifyToken";
