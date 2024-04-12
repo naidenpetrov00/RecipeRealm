@@ -1,9 +1,12 @@
 export interface IUserLoginValues {
+  profilePicture: string;
   username: string;
   email: string;
   password: string;
 }
-
+export interface IUserLoginValuesWithPicture extends IUserLoginValues {
+  profilePicture: string;
+}
 export interface IUserRegisterValues extends IUserLoginValues {
   confirmPassword: string;
 }

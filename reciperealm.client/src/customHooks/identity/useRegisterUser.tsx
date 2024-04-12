@@ -7,6 +7,7 @@ import { authenticated } from "../../store/authSlice";
 import { useAppDispatch, onErrorHandler } from "../helpers";
 import { RegisterUserDocument } from "../../generted/graphql";
 import { IUserLoginValues } from "../../abstractions/identity";
+import defaultProfilePicture from "../../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
 
 interface RegisterHandlerResult {
   registerHandler: (
@@ -48,6 +49,7 @@ export const useRegisterUser = (): RegisterHandlerResult => {
           username,
           email,
           password,
+          profilePicture: defaultProfilePicture,
         },
       });
       dispatch(authenticated(isAuthenticatedCookie()));

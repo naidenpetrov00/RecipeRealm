@@ -6,6 +6,7 @@ import { generateCroppedImage } from "./canvasUtils";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { IUserLoginValues } from "../../abstractions/identity";
 import { useChangeProfilePicture } from "../../customHooks/identity/useChangeProgilePicture";
+import { useAppDispatch } from "../../customHooks/helpers";
 
 interface ImageCopperResult {
   image: string | ArrayBuffer | null;

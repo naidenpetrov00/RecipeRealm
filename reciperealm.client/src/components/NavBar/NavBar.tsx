@@ -8,10 +8,10 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { IUserLoginValues } from "../../abstractions/identity";
 
 import styles from "./NavBar.module.css";
-import defaultProfilePicture from "../../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
 
 const NavBar = () => {
   const isAuthenticated = useAppSelector((state) => state.auth.value);
+  const profilePicture = useAppSelector((state) => state.picture.value);
   const auth = useAuthUser<IUserLoginValues>();
 
   return (
@@ -45,7 +45,7 @@ const NavBar = () => {
               <li>
                 <NavLink to="/myaccount">
                   <img
-                    src={defaultProfilePicture}
+                    src={profilePicture}
                     alt="profile picture"
                     className={"profile-pic " + styles.profilePic}
                   ></img>
