@@ -7,7 +7,7 @@ import { authenticated } from "../../store/authSlice";
 import { useAppDispatch, onErrorHandler } from "../helpers";
 import { RegisterUserDocument } from "../../generted/graphql";
 import { IUserLoginValues } from "../../abstractions/identity";
-import defaultProfilePicture from "../../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
+import { changePictureState } from "../../store/profPictureSlice";
 
 interface RegisterHandlerResult {
   registerHandler: (
@@ -39,7 +39,8 @@ export const useRegisterUser = (): RegisterHandlerResult => {
       onError: onErrorHandler,
     });
 
-    if (result.data?.registerUser.jwtToken) {
+    const profilePicture = result.data?.registerUser.userProfilePicture!;
+    if (result.data?.registerUser.jwtToken && profilePicture) {
       signIn({
         auth: {
           token: result.data?.registerUser.jwtToken,
@@ -49,10 +50,10 @@ export const useRegisterUser = (): RegisterHandlerResult => {
           username,
           email,
           password,
-          profilePicture: defaultProfilePicture,
         },
       });
       dispatch(authenticated(isAuthenticatedCookie()));
+      dispatch(changePictureState(profilePicture));
       navigate("/");
     } else if (result.data?.registerUser.errors) {
       for (const error of result.data?.registerUser.errors) {

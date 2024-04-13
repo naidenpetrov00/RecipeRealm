@@ -1,26 +1,25 @@
-import { Dispatch, FC, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
 
 import styles from "./ImageCropper.module.css";
 import { generateCroppedImage } from "./canvasUtils";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { IUserLoginValues } from "../../abstractions/identity";
-import { useChangeProfilePicture } from "../../customHooks/identity/useChangeProgilePicture";
+import { useChangeProfilePicture } from "../../customHooks/identity/useChangeProfilePicture";
 import { useAppDispatch } from "../../customHooks/helpers";
 
 interface ImageCopperResult {
   image: string | ArrayBuffer | null;
-  setImage: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
   setShowCropper: Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 const ImageCropper: FC<ImageCopperResult> = ({
   image,
-  setImage,
   setShowCropper,
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<Area>();
+  const dispatch = useAppDispatch();
 
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedArea(croppedAreaPixels);
@@ -35,7 +34,6 @@ const ImageCropper: FC<ImageCopperResult> = ({
       return;
     }
     await changePicture(userData!.email, img);
-    setImage(img);
     setShowCropper(false);
   };
 

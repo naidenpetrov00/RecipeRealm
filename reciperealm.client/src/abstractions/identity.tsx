@@ -1,5 +1,4 @@
 export interface IUserLoginValues {
-  profilePicture: string;
   username: string;
   email: string;
   password: string;

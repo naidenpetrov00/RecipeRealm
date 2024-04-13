@@ -9,6 +9,8 @@
 	{
 		public RegisterUserModel? User { get; set; } = null;
 
+		public string? UserProfilePicture { get; set; } = null;
+
 		public string? JwtToken { get; set; } = null;
 
 		public IEnumerable<IdentityError>? Errors { get; set; } = null;

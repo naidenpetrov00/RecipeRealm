@@ -1,15 +1,16 @@
-import defaultProfilePicture from "../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import "./MyAccount.css";
 import { IUserLoginValues } from "../abstractions/identity";
 import { ChangeEvent, Fragment, useRef, useState } from "react";
 import ImageCropper from "../components/MyAccount/ImageCropper";
+import { useAppSelector } from "../customHooks/helpers";
 
 const MyAccount = () => {
   const [showChangeButton, setShowChangeButton] = useState<boolean>(false);
   const user = useAuthUser<IUserLoginValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const profilePicture = useAppSelector((state) => state.picture.value);
   const [showCropper, setShowCropper] = useState<boolean>();
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer | null>(
     null
@@ -37,7 +38,6 @@ const MyAccount = () => {
       {showCropper && (
         <ImageCropper
           image={selectedFile}
-          setImage={setSelectedFile}
           setShowCropper={setShowCropper}
         />
       )}
@@ -68,7 +68,7 @@ const MyAccount = () => {
                 </div>
               )}
               <img
-                src={selectedFile || defaultProfilePicture}
+                src={profilePicture}
                 alt="profile-picture"
                 className="profile-pic"
               />

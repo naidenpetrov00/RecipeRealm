@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../../customHooks/helpers";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import SearchForm from "./SearchForm";
 import LogoutButon from "./LogoutButton";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { useAppSelector } from "../../customHooks/helpers";
 import { IUserLoginValues } from "../../abstractions/identity";
 
 import styles from "./NavBar.module.css";
@@ -45,7 +45,7 @@ const NavBar = () => {
               <li>
                 <NavLink to="/myaccount">
                   <img
-                    src={profilePicture}
+                    src={profilePicture!}
                     alt="profile picture"
                     className={"profile-pic " + styles.profilePic}
                   ></img>

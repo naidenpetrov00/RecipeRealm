@@ -7,6 +7,7 @@ import { authenticated } from "../../store/authSlice";
 import { LoginUserDocument } from "../../generted/graphql";
 import { useAppDispatch, onErrorHandler } from "../helpers";
 import { IUserLoginValues } from "../../abstractions/identity";
+import { changePictureState } from "../../store/profPictureSlice";
 
 interface LoginHandlerResult {
   loginHandler: (email: string, password: string) => Promise<void>;
@@ -29,7 +30,8 @@ export const useLoginUser = (): LoginHandlerResult => {
       onError: onErrorHandler,
     });
 
-    if (result.data?.loginUser.jwtToken) {
+    const profilePicture = result.data?.loginUser.userProfilePicture;
+    if (result.data?.loginUser.jwtToken && profilePicture) {
       signIn({
         auth: {
           token: result.data?.loginUser.jwtToken,
@@ -42,6 +44,7 @@ export const useLoginUser = (): LoginHandlerResult => {
         },
       });
       dispatch(authenticated(isAuthenticatedCookie()));
+      dispatch(changePictureState(profilePicture));
       navigate("/");
     } else if (result.data?.loginUser.error) {
       const error = result.data?.loginUser.error;

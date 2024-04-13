@@ -4,6 +4,7 @@ mutation RegisterUser($userInput: RegisterUserInput!) {
       userName
       email
     }
+    userProfilePicture
     jwtToken
     errors {
       code
@@ -18,6 +19,7 @@ mutation LoginUser($userInput: LoginUserInput!) {
       userName
       email
     }
+    userProfilePicture
     jwtToken
     error {
       code

@@ -8,6 +8,8 @@
 	{
 		public LoginUserModel? User { get; set; } = null;
 
+		public string? UserProfilePicture { get; set; } = null;
+
 		public string? JwtToken { get; set; } = null;
 
 		public IdentityError? Error { get; set; } = null;

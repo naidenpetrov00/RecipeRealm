@@ -8,7 +8,6 @@ import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import ForgotPassword from "./pages/identity/ForgotPassword";
-import ChangePassword from "./components/identity/ChangePassword";
 
 const router = createBrowserRouter([
   {

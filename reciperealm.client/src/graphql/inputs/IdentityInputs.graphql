@@ -2,11 +2,13 @@ type RegisterUserInput {
   username: String!
   email: String!
   password: String!
+  profilePicture: String!
 }
 
 type LoginUserInput {
   email: String!
   password: String!
+  profilePicture: String!
 }
 
 type ForgotPasswordInput {

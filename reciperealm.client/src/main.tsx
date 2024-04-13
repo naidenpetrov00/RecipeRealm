@@ -7,7 +7,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 import App from "./App.tsx";
 import { store as reduxStore } from "./store/store.ts";
-import { IUserLoginValues } from "./abstractions/identity.tsx";
+import {
+  IUserLoginValues,
+  IUserLoginValuesWithPicture,
+} from "./abstractions/identity.tsx";
 
 const client = new ApolloClient({
   uri: "http://localhost:5072/graphql",

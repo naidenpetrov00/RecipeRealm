@@ -5,9 +5,7 @@
 
 	public class LoginUserModel : UserModel
 	{
-		public byte[]? ProfilePicture { get; set; }
-
-		public class Mapping : Profile
+        public class Mapping : Profile
 		{
 			public Mapping()
 			{

@@ -1,13 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import defaultProfilePicture from "../assets/vecteezy_default-avatar-profile-icon-vector-in-flat-style_27708418.jpg";
-
 interface PictureState {
-  value: string;
+  value: string | null;
 }
 
 const initialState: PictureState = {
-  value: defaultProfilePicture,
+  value: localStorage.getItem("picture"),
 };
 
 export const profPictureSlice = createSlice({
@@ -16,6 +14,7 @@ export const profPictureSlice = createSlice({
   reducers: {
     changePictureState: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
+      localStorage.setItem("picture", action.payload);
     },
   },
 });

@@ -14,20 +14,20 @@
 	public class UserService : IUserService
 	{
 		private readonly UserManager<RecipeRealmServerUser> userManager;
-		private readonly IParseProfilePicture pictureParserService;
+		private readonly IProfilePictureService profilePictureService;
 		private readonly IJwtService jwtService;
 		private readonly IMapper mapper;
 		private readonly RecipeRealmServerContext dbContext;
 
 		public UserService(
 			UserManager<RecipeRealmServerUser> userManager,
-			IParseProfilePicture pictureParserService,
+			IProfilePictureService profilePictureService,
 			IJwtService jwtService,
 			IMapper mapper,
 			RecipeRealmServerContext dbContext)
 		{
 			this.userManager = userManager;
-			this.pictureParserService = pictureParserService;
+			this.profilePictureService = profilePictureService;
 			this.jwtService = jwtService;
 			this.mapper = mapper;
 			this.dbContext = dbContext;
@@ -52,6 +52,27 @@
 			};
 		}
 
+		public async Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput)
+		{
+			var user = this.CreateUser(userInput);
+			var result = await userManager.CreateAsync(user, userInput.Password);
+
+			if (result.Succeeded)
+			{
+				var defaultPictureBase64 = this.profilePictureService.GetDefaultPictureBase64WithPrefix();
+				var registerUser = this.mapper.Map<RegisterUserModel>(user);
+				var jwtToken = jwtService.CreateToken(user);
+				return new RegisterUserPayload
+				{
+					User = registerUser,
+					UserProfilePicture = defaultPictureBase64,
+					JwtToken = jwtToken
+				};
+			}
+
+			return new RegisterUserPayload { Errors = result.Errors };
+		}
+
 		public async Task<LoginUserPayload> LoginUser(LoginUserInput userInput)
 		{
 			var user = await GetUserByEmailAsync(userInput.Email);
@@ -64,29 +85,16 @@
 			if (result)
 			{
 				var loginUserModel = this.mapper.Map<LoginUserModel>(user);
+				var profilePictureBase64 = this.profilePictureService.GetProfilePictureFromUser(user.ProfilePicture);
 				var jwtToken = jwtService.CreateToken(user);
 				return new LoginUserPayload()
 				{
 					User = loginUserModel,
+					UserProfilePicture = profilePictureBase64,
 					JwtToken = jwtToken
 				};
 			}
 			return new LoginUserPayload { Error = new UserNotFoundException() };
-		}
-
-		public async Task<RegisterUserPayload> RegisterUser(RegisterUserInput userInput)
-		{
-			var user = this.CreateUser(userInput);
-			var result = await userManager.CreateAsync(user, userInput.Password);
-
-			if (result.Succeeded)
-			{
-				var registerUser = this.mapper.Map<RegisterUserModel>(user);
-				var jwtToken = jwtService.CreateToken(user);
-				return new RegisterUserPayload { User = registerUser, JwtToken = jwtToken };
-			}
-
-			return new RegisterUserPayload { Errors = result.Errors };
 		}
 
 		public async Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput)
@@ -120,11 +128,8 @@
 			{
 				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
 			}
-			var imageBytes = this.pictureParserService.ForDB(userInput.Base64Image);
+			var imageBytes = this.profilePictureService.ParseImageForDB(userInput.Base64Image);
 			user.ProfilePicture = imageBytes;
-
-			//byte[] ImageBytes = user.ProfilePicture;
-			//string base64String = this.dataUriPrefix + Convert.ToBase64String(ImageBytes);
 
 			var result = await this.userManager.UpdateAsync(user);
 			if (result.Succeeded)
