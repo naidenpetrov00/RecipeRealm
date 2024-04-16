@@ -1,19 +1,20 @@
 ﻿namespace RecipeRealm.Server.Services.Identity
 {
 
-	using RecipeRealm.Server.Model;
-	using RecipeRealm.Server.Infrastructure;
-	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Data.Models.Identity;
+    using RecipeRealm.Server.Model;
+    using RecipeRealm.Server.Infrastructure;
+    using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.GraphQL.Identity;
+    using RecipeRealm.Server.Data.Models.Identity;
 
-	using MimeKit;
-	using MailKit.Net.Smtp;
-	using Microsoft.Extensions.Options;
-	using Microsoft.AspNetCore.Identity;
-	using RecipeRealm.Server.Services.Exceptions;
+    using MimeKit;
+    using MailKit.Net.Smtp;
+    using Microsoft.Extensions.Options;
+    using Microsoft.AspNetCore.Identity;
+    using RecipeRealm.Server.Services.Exceptions;
+    using RecipeRealm.Server.Models.Identity;
 
-	public class MailService : IMailService
+    public class MailService : IMailService
 	{
 		private readonly MailSettings _mailSettings;
 		private readonly UserManager<RecipeRealmServerUser> userManager;
