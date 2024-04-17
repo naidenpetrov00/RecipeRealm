@@ -33,22 +33,32 @@ namespace RecipeRealm.Server.Data.Configurations
 				.IsRequired()
 				.HasMaxLength(Constraints.MaxLengthCookingSteps);
 
-			builder.Property(r => r.Likes)
-				.IsRequired();
-
 			builder.Property(r => r.UserId)
 				.IsRequired();
-
-			builder.HasOne(r => r.User)
-				.WithMany(u => u.Recipes);
-
-			builder.HasMany(r => r.Comments)
-				.WithOne(c => c.Recipe);
 		}
 
 		public void Configure(EntityTypeBuilder<Comment> builder)
 		{
-			throw new NotImplementedException();
+			builder.ToTable("Comments");
+
+			builder.Property(c => c.CreatedOn)
+				.IsRequired()
+				.HasDefaultValueSql("GETDATE()");
+
+			builder.Property(c => c.Content)
+				.IsRequired()
+				.HasMaxLength(Constraints.MaxLengthComment);
+
+			builder.Property(c => c.UserId)
+				.IsRequired();
+
+			builder.Property(c => c.RecipeId)
+				.IsRequired();
+
+			builder.HasOne(c => c.Recipe)
+				.WithMany(r => r.Comments)
+				.HasForeignKey(c => c.RecipeId)
+				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

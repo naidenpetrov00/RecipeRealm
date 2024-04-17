@@ -6,15 +6,12 @@ namespace RecipeRealm.Server
 	using RecipeRealm.Server.Infrastructure;
 
 	using global::GraphQL.Server.Ui.Voyager;
+	using System.Reflection;
+	using Microsoft.AspNetCore.Identity;
 	using Microsoft.EntityFrameworkCore;
 	using FluentValidation.AspNetCore;
 	using AppAny.HotChocolate.FluentValidation;
-	using NuGet.Protocol;
-	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.Services.Identity;
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.Extensions.Options;
-	using System.Reflection;
+	using RecipeRealm.Server.Models;
 
 	public class Program
 	{
@@ -58,6 +55,7 @@ namespace RecipeRealm.Server
 
 			if (app.Environment.IsDevelopment())
 			{
+				Seeder.Seed(app);
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}

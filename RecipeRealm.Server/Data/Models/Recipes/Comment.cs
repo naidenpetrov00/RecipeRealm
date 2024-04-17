@@ -6,9 +6,11 @@ namespace RecipeRealm.Server.Data.Models.Recipes
 	{
 		public int Id { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+		public DateTime CreatedOn { get; set; }
 
-        public string Content { get; set; }
+		public string Content { get; set; }
+
+		public int? ParentCommentId { get; set; }
 
 		public virtual Comment ParentComment { get; set; }
 
@@ -16,7 +18,7 @@ namespace RecipeRealm.Server.Data.Models.Recipes
 
 		public virtual RecipeRealmServerUser User { get; set; }
 
-		public int RecipeId { get; set; }
+		public int? RecipeId { get; set; }
 
 		public virtual Recipe Recipe { get; set; }
 	}

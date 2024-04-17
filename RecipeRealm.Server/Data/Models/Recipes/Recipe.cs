@@ -18,7 +18,8 @@ namespace RecipeRealm.Server.Data.Models.Recipes
 		public string CookingSteps { get; set; }
 
 		public int Likes { get; set; }
-		public virtual ICollection<Comment> Comments { get; set; }
+
+		public virtual ICollection<Comment> Comments => new HashSet<Comment>();
 
 		public string UserId { get; set; }
 
