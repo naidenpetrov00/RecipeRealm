@@ -266,7 +266,7 @@ namespace RecipeRealm.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("RecipeRealm.Server.Data.Models.Recipes.Recipe", b =>
@@ -306,7 +306,7 @@ namespace RecipeRealm.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

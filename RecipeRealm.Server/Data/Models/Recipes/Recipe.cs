@@ -1,10 +1,12 @@
-﻿using RecipeRealm.Server.Common.Enums;
-using RecipeRealm.Server.Data.Models.Identity;
-
-namespace RecipeRealm.Server.Data.Models.Recipes
+﻿namespace RecipeRealm.Server.Data.Models.Recipes
 {
+	using RecipeRealm.Server.Common.Enums;
+	using RecipeRealm.Server.Data.Models.Identity;
+	using System.ComponentModel.DataAnnotations.Schema;
+
 	public class Recipe
 	{
+		[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public int Id { get; set; }
 
 		public string Name { get; set; }
