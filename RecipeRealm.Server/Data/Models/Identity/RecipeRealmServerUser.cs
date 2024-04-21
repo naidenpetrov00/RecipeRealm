@@ -11,6 +11,6 @@
 
 		public byte[]? ProfilePicture { get; set; }
 
-		public ICollection<Recipe> Recipes { get; set; }
+		public ICollection<Recipe>? Recipes { get; set; }
 	}
 }

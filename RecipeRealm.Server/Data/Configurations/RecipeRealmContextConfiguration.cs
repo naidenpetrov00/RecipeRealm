@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RecipeRealm.Server.Data.Models.Identity;
-using RecipeRealm.Server.Data.Models.Recipes;
-
-namespace RecipeRealm.Server.Data.Configurations
+﻿namespace RecipeRealm.Server.Data.Configurations
 {
+	using RecipeRealm.Server.Data.Models.Recipes;
+
+	using Microsoft.EntityFrameworkCore.Metadata.Builders;
+	using Microsoft.EntityFrameworkCore;
+
 	internal sealed class RecipeRealmContextConfiguration :
 		IEntityTypeConfiguration<Recipe>,
 		IEntityTypeConfiguration<Comment>
@@ -12,8 +12,6 @@ namespace RecipeRealm.Server.Data.Configurations
 		public void Configure(EntityTypeBuilder<Recipe> builder)
 		{
 			builder.ToTable("Recipes");
-
-			builder.HasKey(r => r.Id);
 
 			builder.Property(r => r.Name)
 				.IsRequired()

@@ -55,7 +55,7 @@ namespace RecipeRealm.Server
 
 			if (app.Environment.IsDevelopment())
 			{
-				//Seeder.Seed(app);
+				Seeder.Seed(app);
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
