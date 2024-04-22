@@ -5,13 +5,14 @@
 	using RecipeRealm.Server.Data.Models.Identity;
 	using RecipeRealm.Server.Data.Models.Recipes;
 
-	using NuGet.Packaging;
+	using Microsoft.AspNetCore.Identity;
 
 	public static class Seeder
 	{
 		private static readonly string testUserId = "TestUseerId";
 		private static readonly string chefMasterUserId = "ChefMasterId";
 		private static readonly string tastyCookingUserId = "TastyCookingId";
+		private static readonly string usersPassword = "Test123@gmail.com";
 		private static readonly IList<RecipeRealmServerUser> usersToAdd = new List<RecipeRealmServerUser>
 		{
 			new() {Id=testUserId , UserName="Test123",Email="Test123@gmail.com",PasswordHash="Test123@gmail.com"},
@@ -74,16 +75,17 @@
 		private static readonly IList<Comment> commentsToAdd = new List<Comment>
 {
 	new() { CreatedOn = DateTime.UtcNow.AddDays(1), Content = "One of my favorites!",UserId=testUserId},
-	new() { CreatedOn = DateTime.UtcNow.AddMinutes(25), Content = "I'll definitely try this recipe!",UserId=chefMasterUserId},
-	new() { CreatedOn = DateTime.UtcNow.AddHours(6), Content = "Perfect for dinner parties!", UserId = tastyCookingUserId},
-	new() { CreatedOn = DateTime.UtcNow.AddHours(4), Content = "Simple yet delicious!", UserId = chefMasterUserId},
-	new() { CreatedOn = DateTime.UtcNow.AddHours(3), Content = "Absolutely love this dessert!" , UserId = tastyCookingUserId}
+	new() { CreatedOn = DateTime.UtcNow.AddMinutes(25), Content = "I'll definitely try this recipe!",UserId=testUserId},
+	new() { CreatedOn = DateTime.UtcNow.AddHours(6), Content = "Perfect for dinner parties!",UserId=tastyCookingUserId},
+	new() { CreatedOn = DateTime.UtcNow.AddHours(4), Content = "Simple yet delicious!",UserId=chefMasterUserId},
+	new() { CreatedOn = DateTime.UtcNow.AddHours(3), Content = "Absolutely love this dessert!",UserId=tastyCookingUserId}
 };
 
 		public static async Task Seed(WebApplication app)
 		{
 			using var scope = app.Services.CreateScope();
 			var dbContext = scope.ServiceProvider.GetRequiredService<RecipeRealmServerContext>();
+			var userManager = scope.ServiceProvider.GetRequiredService<UserManager<RecipeRealmServerUser>>();
 
 			try
 			{
@@ -91,8 +93,10 @@
 
 				if (!dbContext.Users.Any())
 				{
-					dbContext.Users.AddRange(usersToAdd);
-					await dbContext.SaveChangesAsync();
+					foreach (var user in usersToAdd)
+					{
+						await userManager.CreateAsync(user, usersPassword);
+					}
 
 					var users = dbContext.Users.ToList();
 					for (int i = 0; i < users.Count; i++)
