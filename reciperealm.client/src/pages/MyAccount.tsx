@@ -1,8 +1,10 @@
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { ChangeEvent, Fragment, useRef, useState } from "react";
+
+import MyRecipes from "../components/MyAccount/MyRecipes";
+import ImageCropper from "../components/MyAccount/ImageCropper";
 
 import { IUserLoginValues } from "../abstractions/identity";
-import { ChangeEvent, Fragment, useRef, useState } from "react";
-import ImageCropper from "../components/MyAccount/ImageCropper";
 import { useAppSelector } from "../customHooks/helpers";
 
 import "./MyAccount.css";
@@ -85,6 +87,7 @@ const MyAccount = () => {
           </div>
         </header>
       </section>
+      <MyRecipes />
     </Fragment>
   );
 };
