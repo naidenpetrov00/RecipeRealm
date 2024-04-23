@@ -143,7 +143,7 @@
 			};
 		}
 
-		private async Task<RecipeRealmServerUser?> GetUserByEmailAsync(string email)
+		public async Task<RecipeRealmServerUser?> GetUserByEmailAsync(string email)
 		{
 			return await this.userManager.FindByEmailAsync(email);
 		}

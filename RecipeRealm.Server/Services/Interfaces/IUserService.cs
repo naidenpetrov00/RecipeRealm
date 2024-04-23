@@ -19,5 +19,7 @@
 		Task<ChangePasswordPayload> ChangePassword(ChangePasswordInput userInput);
 
 		Task<ChangeProfilePicturePayload> ChangeProfilePicture(ChangeProfilePictureInput userInput);
+
+		Task<RecipeRealmServerUser?> GetUserByEmailAsync(string email);
 	}
 }

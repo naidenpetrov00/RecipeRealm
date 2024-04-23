@@ -34,6 +34,7 @@ namespace RecipeRealm.Server
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
 				.AddQueryType<Query>()
+					.AddTypeExtension<RecipesQuery>()
 				.AddMutationType<Mutation>()
 				.AddFluentValidation();
 
