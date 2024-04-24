@@ -6,7 +6,7 @@
 	{
 		public bool ProfilePictureChanged { get; set; } = false;
 
-		public IEnumerable<IdentityError>? Errors { get; set; } = null;
+		public IEnumerable<IdentityError> Errors { get; set; } = new HashSet<IdentityError>();
 
 	}
 }

@@ -9,10 +9,10 @@
 	{
 		public RegisterUserModel? User { get; set; } = null;
 
-		public string? UserProfilePicture { get; set; } = null;
+		public string? UserProfilePicture { get; set; } = string.Empty;
 
-		public string? JwtToken { get; set; } = null;
+		public string? JwtToken { get; set; } = string.Empty;
 
-		public IEnumerable<IdentityError>? Errors { get; set; } = null;
+		public IEnumerable<IdentityError> Errors { get; set; } = new HashSet<IdentityError>();
 	}
 }

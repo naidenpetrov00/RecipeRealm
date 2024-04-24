@@ -6,7 +6,7 @@ namespace RecipeRealm.Server.GraphQL.Identity
 	{
 		public bool PasswordChanged { get; set; } = false;
 
-		public IEnumerable<IdentityError>? Errors { get; set; } = null;
+		public IEnumerable<IdentityError> Errors { get; set; } = new HashSet<IdentityError>();
 
 	}
 }
