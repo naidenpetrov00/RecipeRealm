@@ -11,6 +11,8 @@
 	using Xunit;
 	using FluentAssertions;
 	using Microsoft.AspNetCore.Identity;
+	using AutoMapper;
+	using RecipeRealm.Server.Models.Identity;
 
 	public class UserServiceTests
 	{
@@ -18,6 +20,8 @@
 		private readonly UserService userService;
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly IJwtService jwtService;
+		private readonly IMapper mapper;
+		private readonly IProfilePictureService profilePictureService;
 
 		public UserServiceTests()
 		{
@@ -25,8 +29,15 @@
 			this.userManager = Substitute.For<UserManager<RecipeRealmServerUser>>(
 				store, null, null, null, null, null, null, null, null);
 			this.jwtService = Substitute.For<IJwtService>();
+			this.mapper = Substitute.For<IMapper>();
+			this.profilePictureService = Substitute.For<IProfilePictureService>();
 			this.dbContext = InMemoryDbContext.GetInMemoryDatabaseContext();
-			this.userService = new UserService(this.userManager, jwtService, this.dbContext);
+			this.userService = new UserService(
+				this.userManager,
+				this.profilePictureService,
+				this.jwtService,
+				this.mapper,
+				this.dbContext);
 		}
 
 		[Fact]
@@ -61,9 +72,12 @@
 				PasswordHash = userInput.Password
 			};
 			var jwtToken = "valid_jwt_token";
-			this.userManager.FindByEmailAsync(userInput.Email).Returns(user);
+			this.userService.GetUserByEmailAsync(userInput.Email).Returns(user);
 			this.userManager.CheckPasswordAsync(user, userInput.Password).Returns(true);
 			this.jwtService.CreateToken(user).Returns(jwtToken);
+			var loginUserModel = new LoginUserModel { Email = user.Email, UserName = user.UserName };
+			this.mapper.Map<LoginUserModel>(user)
+				.Returns(loginUserModel);
 
 			var result = await this.userService.LoginUser(userInput);
 
@@ -127,6 +141,36 @@
 		}
 
 		[Fact]
+		public async void RegisterUser_ReturnsUserCredAndJwtToken_IfRegisterSuccessfull()
+		{
+			var jwtToken = "BearerToken";
+			var input = new RegisterUserInput(
+				"NewUser1",
+				"NewUser1@gmail.com",
+				"NewUser1Password");
+			var user = new RecipeRealmServerUser
+			{
+				Email = input.Email,
+				UserName = input.Username,
+			};
+			this.userManager
+				.CreateAsync(Arg.Any<RecipeRealmServerUser>(), input.Password)
+				.Returns(IdentityResult.Success);
+			this.jwtService
+				.CreateToken(Arg.Any<RecipeRealmServerUser>())
+				.Returns(jwtToken);
+			var registerUserModel = new RegisterUserModel { Email = user.Email, UserName = user.UserName };
+			this.mapper.Map<RegisterUserModel>(Arg.Any<RecipeRealmServerUser>())
+				.Returns(registerUserModel);
+
+			var result = await this.userService.RegisterUser(input);
+
+			result.User.Should().NotBeNull();
+			result.User?.Email.Should().Be(input.Email);
+			result.JwtToken.Should().Be(jwtToken);
+		}
+
+		[Fact]
 		public void RegisterUser_ThrowsError_WhenInputNotValid()
 		{
 			var input = new RegisterUserInput(
@@ -138,28 +182,6 @@
 			var result = registerValidator.Validate(input);
 
 			result.IsValid.Should().BeFalse();
-		}
-
-		[Fact]
-		public async void RegisterUser_ReturnsUserCredAndJwtToken_IfRegisterSuccessfull()
-		{
-			var jwtToken = "BearerToken";
-			var input = new RegisterUserInput(
-				"NewUser1",
-				"NewUser1@gmail.com",
-				"NewUser1Password");
-			this.userManager
-				.CreateAsync(Arg.Any<RecipeRealmServerUser>(), input.Password)
-				.Returns(IdentityResult.Success);
-			this.jwtService
-				.CreateToken(Arg.Any<RecipeRealmServerUser>())
-				.Returns(jwtToken);
-
-			var result = await this.userService.RegisterUser(input);
-
-			result.User.Should().NotBeNull();
-			result.User?.Email.Should().Be(input.Email);
-			result.JwtToken.Should().Be(jwtToken);
 		}
 
 		[Fact]
