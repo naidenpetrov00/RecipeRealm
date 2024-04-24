@@ -1,9 +1,10 @@
 ﻿namespace RecipeRealm.Server.Services.Interfaces
 {
+	using RecipeRealm.Server.Common;
 	using RecipeRealm.Server.GraphQL.Recipes;
 
-	public interface IRecipesService
-    {
-        Task<GetUserRecipesPayload> GetUserRecipesAsync(string email);
-    }
+	public interface IRecipesService : IService
+	{
+		Task<GetUserRecipesPayload> GetUserRecipesAsync(string email);
+	}
 }
