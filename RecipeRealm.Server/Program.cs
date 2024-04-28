@@ -1,9 +1,10 @@
 namespace RecipeRealm.Server
 {
 	using RecipeRealm.Server.Data;
+	using RecipeRealm.Server.Models;
+	using RecipeRealm.Server.Infrastructure;
 	using RecipeRealm.Server.GraphQL.Queries;
 	using RecipeRealm.Server.GraphQL.Mutations;
-	using RecipeRealm.Server.Infrastructure;
 
 	using global::GraphQL.Server.Ui.Voyager;
 	using System.Reflection;
@@ -11,7 +12,6 @@ namespace RecipeRealm.Server
 	using Microsoft.EntityFrameworkCore;
 	using FluentValidation.AspNetCore;
 	using AppAny.HotChocolate.FluentValidation;
-	using RecipeRealm.Server.Models;
 
 	public class Program
 	{
@@ -34,7 +34,6 @@ namespace RecipeRealm.Server
 				.AddGraphQLServer()
 				.RegisterDbContext<RecipeRealmServerContext>()
 				.AddQueryType<Query>()
-					.AddTypeExtension<RecipesQuery>()
 				.AddMutationType<Mutation>()
 				.AddFluentValidation();
 

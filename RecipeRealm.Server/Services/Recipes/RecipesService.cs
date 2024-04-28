@@ -1,14 +1,14 @@
 ﻿namespace RecipeRealm.Server.Services.Recipes
 {
 	using RecipeRealm.Server.Data;
-	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Models.Recipes;
 	using RecipeRealm.Server.GraphQL.Recipes;
+	using RecipeRealm.Server.Services.Interfaces;
+	using RecipeRealm.Server.Services.Exceptions;
 
 	using System.Threading.Tasks;
-	using AutoMapper.QueryableExtensions;
 	using AutoMapper;
-	using RecipeRealm.Server.Models.Recipes;
-	using RecipeRealm.Server.Services.Exceptions;
+	using AutoMapper.QueryableExtensions;
 
 	public class RecipesService : IRecipesService
 	{
