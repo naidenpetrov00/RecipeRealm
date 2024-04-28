@@ -1,0 +1,21 @@
+query UserRecipes($email: String!) {
+  userRecipes(email: $email) {
+    userRecipes {
+      name
+      ingredients
+      likes
+      commentsCount
+    }
+    userRecipes {
+      name
+      cookingTime
+      difficulty
+      ingredients
+      cookingSteps
+      likes
+      commentsCount
+      userId
+    }
+    error
+  }
+}
