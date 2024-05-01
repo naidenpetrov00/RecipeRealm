@@ -1,8 +1,13 @@
 import { useLazyQuery } from "@apollo/client";
-import { UserRecipesDocument } from "../../generted/graphql";
+import {
+  GetUserRecipesPayload,
+  UserRecipesDocument,
+  UserRecipesQuery,
+} from "../../generted/graphql";
+import { onErrorHandler } from "../helpers";
 
 interface IGetUserRecipesResult {
-  getUserRecipes: (email: string) => Promise<void>;
+  getUserRecipes: (email: string) => Promise<any>;
 }
 export const useGetUserRecipes = (): IGetUserRecipesResult => {
   const [getUserRecipesQuery] = useLazyQuery(UserRecipesDocument);
@@ -10,9 +15,11 @@ export const useGetUserRecipes = (): IGetUserRecipesResult => {
   const getUserRecipes = async (email: string) => {
     const result = await getUserRecipesQuery({
       variables: { email },
+      onError: onErrorHandler,
     });
+    console.log("from custom hook");
 
-    console.log(result.data?.userRecipes.userRecipes[0].name);
+    return result.data?.userRecipes;
   };
 
   return { getUserRecipes };

@@ -1,0 +1,21 @@
+body {
+  background-color: #d5d6d7;
+}
+.main-section {
+  padding: 15px;
+  background-color: #fff;
+}
+.list-inline {
+  text-align: right;
+}
+.list-inline-item {
+  border-right: 1px solid black;
+  padding-right: 6px;
+  line-height: 0.4em;
+}
+.list-inline-item:last-child {
+  border: none;
+}
+.post-detail ul {
+  margin-top: 15px;
+}

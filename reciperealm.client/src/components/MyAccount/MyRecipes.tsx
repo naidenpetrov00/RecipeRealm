@@ -1,16 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGetUserRecipes } from "../../customHooks/recipes/useGetUserRecipes";
+import RecipePost from "./MyRecipePost";
 
 const MyRecipes = () => {
   const { getUserRecipes } = useGetUserRecipes();
+  const [recipesData, setRecipesData] = useState(null);
 
-  const ClickHandler = () => {
-    getUserRecipes("Test123@gmail.com");
+  useEffect(() => {}, [recipesData]);
+
+  useEffect(() => {
+    useEffectCallback();
+  }, []);
+
+  const useEffectCallback = async () => {
+    if (!recipesData) {
+      setRecipesData(await getUserRecipes("Test123@gmail.com"));
+    }
   };
+
   return (
     <section>
       <h1>MyRecipes</h1>
-      <button onClick={ClickHandler}></button>
+      <div className="container main-section border">
+        <RecipePost />
+        <RecipePost />
+        <RecipePost />
+      </div>
     </section>
   );
 };
