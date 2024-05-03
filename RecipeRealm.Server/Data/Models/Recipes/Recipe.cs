@@ -14,13 +14,13 @@
 
 		public DifficultyLevels Difficulty { get; set; }
 
-		public string Ingredients { get; set; }
-
 		public string CookingSteps { get; set; }
 
-		public int Likes { get; set; }
+		public int UpVotes { get; set; }
 
-		public virtual ICollection<Comment> Comments => new HashSet<Comment>();
+		public int DownVotes { get; set; }
+
+		public int SavesCount { get; set; }
 
 		public string UserId { get; set; }
 

@@ -17,13 +17,13 @@
 
 		public DifficultyLevels Difficulty { get; set; }
 
-		public string Ingredients { get; set; }
-
 		public string CookingSteps { get; set; }
 
-		public int Likes { get; set; }
+		public int UpVotes { get; set; }
 
-		public int CommentsCount { get; set; }
+		public int DownVotes { get; set; }
+
+		public int SavesCount { get; set; }
 
 		public string UserId { get; set; }
 
@@ -34,9 +34,7 @@
 	{
 		public Mapping()
 		{
-			CreateMap<Recipe, UserRecipesModel>()
-				.ForMember(dest => dest.CommentsCount,
-				opt => opt.MapFrom(src => src.Comments.Count));
+			CreateMap<Recipe, UserRecipesModel>();
 		}
 	}
 }
