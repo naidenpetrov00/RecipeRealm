@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useGetUserRecipes } from "../../customHooks/recipes/useGetUserRecipes";
-import RecipePost from "./MyRecipePost";
+import MyRecipePost from "./MyRecipePost";
+import { UserRecipesQueryReturn } from "../../abstractions/recipes";
 
 const MyRecipes = () => {
   const { getUserRecipes } = useGetUserRecipes();
-  const [recipesData, setRecipesData] = useState(null);
-
-  useEffect(() => {}, [recipesData]);
+  const [recipesData, setRecipesData] = useState<UserRecipesQueryReturn>();
 
   useEffect(() => {
     useEffectCallback();
@@ -22,9 +21,11 @@ const MyRecipes = () => {
     <section>
       <h1>MyRecipes</h1>
       <div className="container main-section border">
-        <RecipePost />
-        <RecipePost />
-        <RecipePost />
+        {recipesData?.error && <p>{recipesData.error}</p>}
+        {recipesData?.userRecipes &&
+          recipesData.userRecipes.map((r) => (
+            <MyRecipePost key={r.name} recipeInfo={r} />
+          ))}
       </div>
     </section>
   );

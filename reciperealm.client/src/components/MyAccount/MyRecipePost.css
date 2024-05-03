@@ -1,12 +1,6 @@
-body {
-  background-color: #d5d6d7;
-}
 .main-section {
   padding: 15px;
   background-color: #fff;
-}
-.list-inline {
-  text-align: right;
 }
 .list-inline-item {
   border-right: 1px solid black;
@@ -19,3 +13,4 @@ body {
 .post-detail ul {
   margin-top: 15px;
 }
+

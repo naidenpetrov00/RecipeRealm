@@ -9,6 +9,8 @@ import RegisterPage from "./pages/identity/RegisterPage";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import ForgotPassword from "./pages/identity/ForgotPassword";
 
+import "./App.css";
+
 const router = createBrowserRouter([
   {
     path: "/",

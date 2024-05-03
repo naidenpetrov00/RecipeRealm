@@ -2,18 +2,18 @@ query UserRecipes($email: String!) {
   userRecipes(email: $email) {
     userRecipes {
       name
-      ingredients
-      likes
-      commentsCount
+      upVotes
+      downVotes
+      savesCount
     }
     userRecipes {
       name
       cookingTime
       difficulty
-      ingredients
       cookingSteps
-      likes
-      commentsCount
+      upVotes
+      downVotes
+      savesCount
       userId
     }
     error
