@@ -11,5 +11,12 @@
 		{
 			return await recipesService.GetUserRecipesAsync(email);
 		}
+
+		public async Task<GetUserRecipesCountAndStatsPayload> GetUserRecipesCountAndStats(
+			string email,
+			[Service] IRecipesService recipesService)
+		{
+			return await recipesService.GetUserRecipesCountAndStats(email);
+		}
 	}
 }

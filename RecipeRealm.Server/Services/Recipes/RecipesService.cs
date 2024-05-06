@@ -9,6 +9,8 @@
 	using System.Threading.Tasks;
 	using AutoMapper;
 	using AutoMapper.QueryableExtensions;
+	using NSubstitute;
+	using Microsoft.EntityFrameworkCore;
 
 	public class RecipesService : IRecipesService
 	{
@@ -24,6 +26,23 @@
 			this.dbContext = dbContext;
 			this.userService = userService;
 			this.mapper = mapper;
+		}
+
+		public async Task<GetUserRecipesCountAndStatsPayload> GetUserRecipesCountAndStats(string email)
+		{
+			var user = await this.userService.GetUserByEmailAsync(email);
+			var recipesStats = this.dbContext.Recipes
+				.Where(r => r.UserId == user.Id)
+				.ProjectTo<RecipesStatsModel>(this.mapper.ConfigurationProvider)
+				.ToList();
+
+			return new GetUserRecipesCountAndStatsPayload
+			{
+				RecipesCount = recipesStats.Count,
+				UpVotes = recipesStats.Sum(r => r.UpVotes),
+				DownVotes = recipesStats.Sum(r => r.DownVotes),
+				SavesCount = recipesStats.Sum(r => r.SavesCount),
+			};
 		}
 
 		public async Task<GetUserRecipesPayload> GetUserRecipesAsync(string email)

@@ -2,7 +2,7 @@
 {
 	using RecipeRealm.Server.Models.Recipes;
 
-	public class GetUserRecipesPayload
+	public record GetUserRecipesPayload
 	{
 		public ICollection<UserRecipesModel> UserRecipes { get; set; } = new HashSet<UserRecipesModel>();
 

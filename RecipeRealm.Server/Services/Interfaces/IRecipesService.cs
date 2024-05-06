@@ -5,6 +5,7 @@
 
 	public interface IRecipesService : IService
 	{
+		Task<GetUserRecipesCountAndStatsPayload> GetUserRecipesCountAndStats(string email);
 		Task<GetUserRecipesPayload> GetUserRecipesAsync(string email);
 	}
 }

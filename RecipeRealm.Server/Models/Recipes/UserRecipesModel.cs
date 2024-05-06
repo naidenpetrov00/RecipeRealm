@@ -28,8 +28,9 @@
 		public string UserId { get; set; }
 
 		public virtual RecipeRealmServerUser User { get; set; }
-	}
 
+		
+	}
 	public class Mapping : Profile
 	{
 		public Mapping()
