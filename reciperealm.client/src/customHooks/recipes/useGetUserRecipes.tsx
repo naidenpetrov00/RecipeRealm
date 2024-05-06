@@ -1,10 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
 
 import { onErrorHandler } from "../helpers";
-import {
-  UserRecipesDocument,
-  UserRecipesQueryReturn,
-} from "../../generted/graphql";
+import { UserRecipesDocument } from "../../generted/graphql";
+import { UserRecipesQueryReturn } from "../../abstractions/recipes";
 
 interface IGetUserRecipesResult {
   getUserRecipes: (

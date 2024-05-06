@@ -1,13 +1,15 @@
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { ChangeEvent, Fragment, useRef, useState } from "react";
 
-import MyRecipes from "../components/MyAccount/MyRecipes";
+import MyRecipes from "./MyRecipes";
 import ImageCropper from "../components/MyAccount/ImageCropper";
 
 import { IUserLoginValues } from "../abstractions/identity";
 import { useAppSelector } from "../customHooks/helpers";
 
 import "./MyAccount.css";
+import { NavLink, Outlet } from "react-router-dom";
+import Tab from "../components/MyAccount/UI/Tab";
 
 const MyAccount = () => {
   const [showCropper, setShowCropper] = useState<boolean>();
@@ -87,7 +89,7 @@ const MyAccount = () => {
           </div>
         </header>
       </section>
-      <MyRecipes />
+      <Tab />
     </Fragment>
   );
 };

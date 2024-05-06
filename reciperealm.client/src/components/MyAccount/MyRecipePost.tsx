@@ -9,8 +9,6 @@ interface MyRecipePostProps {
   recipeInfo: RecipeModel;
 }
 const MyRecipePost: FC<MyRecipePostProps> = ({ recipeInfo }) => {
-  console.log(recipeInfo);
-
   return (
     <Fragment>
       <div className="row">
@@ -43,10 +41,10 @@ const MyRecipePost: FC<MyRecipePostProps> = ({ recipeInfo }) => {
                   <span>Sept 16th,2017</span>
                 </li>
                 <li className="list-inline-item">
-                  <span>Cooking Time</span>
+                  <span>{recipeInfo.cookingTime.substring(2)}</span>
                 </li>
                 <li className="list-inline-item">
-                  <span> Difficulty</span>
+                  <span>{recipeInfo.difficulty}</span>
                 </li>
               </ul>
             </div>

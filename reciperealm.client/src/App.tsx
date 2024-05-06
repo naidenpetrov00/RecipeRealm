@@ -10,6 +10,8 @@ import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import ForgotPassword from "./pages/identity/ForgotPassword";
 
 import "./App.css";
+import MyRecipes from "./pages/MyRecipes";
+import SavedRecipes from "./pages/SavedRecipes";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
             <MyAccount />
           </RequireAuth>
         ),
+        children: [
+          { path: "myrecipes", element: <MyRecipes /> },
+          { path: "savedrecipes", element: <SavedRecipes /> },
+        ],
       },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
