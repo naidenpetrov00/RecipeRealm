@@ -20,3 +20,11 @@ export enum DifficultyLevels {
   Hard = "HARD",
   Medium = "MEDIUM",
 }
+
+export interface UserRecipesCountAndStatsQueryReturn {
+  __typename?: "GetUserRecipesCountAndStatsPayload";
+  recipesCount: number;
+  upVotes: number;
+  downVotes: number;
+  savesCount: number;
+}

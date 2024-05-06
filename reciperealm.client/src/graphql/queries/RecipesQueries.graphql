@@ -19,3 +19,12 @@ query UserRecipes($email: String!) {
     error
   }
 }
+
+query UserRecipesCountAndStats($email: String!) {
+  userRecipesCountAndStats(email: $email) {
+    recipesCount
+    upVotes
+    downVotes
+    savesCount
+  }
+}

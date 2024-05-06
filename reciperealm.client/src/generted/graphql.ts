@@ -73,6 +73,14 @@ export type ForgotPasswordPayload = {
   error: Scalars["String"]["output"];
 };
 
+export type GetUserRecipesCountAndStatsPayload = {
+  __typename?: "GetUserRecipesCountAndStatsPayload";
+  downVotes: Scalars["Int"]["output"];
+  recipesCount: Scalars["Int"]["output"];
+  savesCount: Scalars["Int"]["output"];
+  upVotes: Scalars["Int"]["output"];
+};
+
 export type GetUserRecipesPayload = {
   __typename?: "GetUserRecipesPayload";
   error: Scalars["String"]["output"];
@@ -138,6 +146,7 @@ export type Query = {
   checkEmailAvailability: Scalars["Boolean"]["output"];
   checkUsernameAvailability: Scalars["Boolean"]["output"];
   userRecipes: GetUserRecipesPayload;
+  userRecipesCountAndStats: GetUserRecipesCountAndStatsPayload;
   validateToken: Scalars["Boolean"]["output"];
 };
 
@@ -150,6 +159,10 @@ export type QueryCheckUsernameAvailabilityArgs = {
 };
 
 export type QueryUserRecipesArgs = {
+  email: Scalars["String"]["input"];
+};
+
+export type QueryUserRecipesCountAndStatsArgs = {
   email: Scalars["String"]["input"];
 };
 
@@ -374,6 +387,21 @@ export type UserRecipesQuery = {
       cookingSteps: string;
       userId: string;
     }>;
+  };
+};
+
+export type UserRecipesCountAndStatsQueryVariables = Exact<{
+  email: Scalars["String"]["input"];
+}>;
+
+export type UserRecipesCountAndStatsQuery = {
+  __typename?: "Query";
+  userRecipesCountAndStats: {
+    __typename?: "GetUserRecipesCountAndStatsPayload";
+    recipesCount: number;
+    upVotes: number;
+    downVotes: number;
+    savesCount: number;
   };
 };
 
@@ -1026,3 +1054,63 @@ export const UserRecipesDocument = {
     },
   ],
 } as unknown as DocumentNode<UserRecipesQuery, UserRecipesQueryVariables>;
+export const UserRecipesCountAndStatsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "UserRecipesCountAndStats" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "email" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "userRecipesCountAndStats" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "email" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "email" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "recipesCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "upVotes" } },
+                { kind: "Field", name: { kind: "Name", value: "downVotes" } },
+                { kind: "Field", name: { kind: "Name", value: "savesCount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UserRecipesCountAndStatsQuery,
+  UserRecipesCountAndStatsQueryVariables
+>;

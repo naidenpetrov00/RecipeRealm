@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
-import { useGetUserRecipes } from "../customHooks/recipes/useGetUserRecipes";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+
 import MyRecipePost from "../components/MyAccount/MyRecipePost";
+
+import { IUserLoginValues } from "../abstractions/identity";
 import { UserRecipesQueryReturn } from "../abstractions/recipes";
+import { useGetUserRecipes } from "../customHooks/recipes/useGetUserRecipes";
 
 const MyRecipes = () => {
-  const { getUserRecipes } = useGetUserRecipes();
   const [recipesData, setRecipesData] = useState<UserRecipesQueryReturn>();
 
   useEffect(() => {
     useEffectCallback();
-  }, []);
+  }, [recipesData]);
 
+  const user = useAuthUser<IUserLoginValues>();
+  const { getUserRecipes } = useGetUserRecipes();
   const useEffectCallback = async () => {
     if (!recipesData) {
-      setRecipesData(await getUserRecipes("Test123@gmail.com"));
+      setRecipesData(await getUserRecipes(user?.email!));
     }
   };
 

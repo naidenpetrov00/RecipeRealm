@@ -1,15 +1,12 @@
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { ChangeEvent, Fragment, useRef, useState } from "react";
 
-import MyRecipes from "./MyRecipes";
+import Tab from "../components/MyAccount/UI/Tab";
 import ImageCropper from "../components/MyAccount/ImageCropper";
 
-import { IUserLoginValues } from "../abstractions/identity";
 import { useAppSelector } from "../customHooks/helpers";
 
 import "./MyAccount.css";
-import { NavLink, Outlet } from "react-router-dom";
-import Tab from "../components/MyAccount/UI/Tab";
+import UserStats from "../components/MyAccount/UserStats";
 
 const MyAccount = () => {
   const [showCropper, setShowCropper] = useState<boolean>();
@@ -17,7 +14,6 @@ const MyAccount = () => {
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer | null>(
     null
   );
-  const user = useAuthUser<IUserLoginValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profilePicture = useAppSelector((state) => state.picture.value);
 
@@ -75,17 +71,7 @@ const MyAccount = () => {
                 className="profile-pic"
               />
             </div>
-            <h1 className="heading">{user?.username}</h1>
-            <div className="stats">
-              <div className="col-6">
-                <h4>20</h4>
-                <p>Recipes</p>
-              </div>
-              <div className="col-6">
-                <h4>10</h4>
-                <p>Likes</p>
-              </div>
-            </div>
+            <UserStats />
           </div>
         </header>
       </section>
