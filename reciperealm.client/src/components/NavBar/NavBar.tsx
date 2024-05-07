@@ -33,8 +33,8 @@ const NavBar = () => {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
+      <div className="collapse navbar-collapse " id="navbarSupportedContent">
+        <ul className={"navbar-nav mr-auto " + styles.links}>
           <li className="nav-item">
             <NavLink className="nav-link" to="/">
               Home <span className="sr-only">(current)</span>
@@ -75,6 +75,16 @@ const NavBar = () => {
             </Fragment>
           )}
         </ul>
+        {isAuthenticated && (
+          <ul className={"navbar-nav ml-auto " + styles.links}>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/addrecipe">
+                <button className="btn btn-light">Add Recipe</button>
+              </NavLink>
+            </li>
+          </ul>
+        )}
+
         <SearchForm />
       </div>
     </nav>

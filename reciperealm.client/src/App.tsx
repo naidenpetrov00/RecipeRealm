@@ -12,6 +12,7 @@ import ForgotPassword from "./pages/identity/ForgotPassword";
 import "./App.css";
 import MyRecipes from "./pages/MyRecipes";
 import SavedRecipes from "./pages/SavedRecipes";
+import AddRecipe from "./pages/AddRecipe";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "addrecipe", element: <AddRecipe /> },
       {
         path: "myaccount",
         element: (

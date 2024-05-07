@@ -12,7 +12,7 @@ import { useRegisterUser } from "../../customHooks/identity/useRegisterUser";
 import { useCheckEmailAvailability } from "../../customHooks/identity/useCheckEmailAvailability";
 import { useCheckUsernameAvailability } from "../../customHooks/identity/useCheckUsernameAvailability";
 
-import styles from "./LoginPage.module.css";
+import styles from "../Common/Form.module.css";
 
 const RegisterPage = () => {
   const {

@@ -10,7 +10,7 @@ import {
 import ReCaptcha from "../../components/ReCaptcha";
 import { useLoginUser } from "../../customHooks/identity/useLoginUser";
 
-import styles from "./LoginPage.module.css";
+import styles from "../Common/Form.module.css";
 
 const LoginPage = () => {
   const {
