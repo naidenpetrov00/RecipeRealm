@@ -20,7 +20,7 @@
 .outline label {
   align-self: flex-start;
 }
-.outline p{
+.outline p {
   align-self: start;
 }
 
@@ -28,4 +28,27 @@
   max-width: 900px;
   margin: 0 auto;
   display: block;
+}
+
+.imagesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.imageContainer {
+  position: relative;
+  width: 10%;
+  height: auto;
+}
+.buttonOnHover {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+@media (max-width: 600px) {
+  .imageContainer {
+    position: relative;
+    width: 30%;
+    height: auto;
+  }
 }
