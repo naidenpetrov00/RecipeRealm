@@ -3,7 +3,6 @@
 
     using RecipeRealm.Server.Model;
     using RecipeRealm.Server.Services.Interfaces;
-    using RecipeRealm.Server.GraphQL.Identity;
     using RecipeRealm.Server.Data.Models.Identity;
 
     using MimeKit;
@@ -13,6 +12,7 @@
     using RecipeRealm.Server.Services.Exceptions;
     using RecipeRealm.Server.Models.Identity;
     using RecipeRealm.Server.Models;
+    using RecipeRealm.Server.GraphQL.Identity.Payloads;
 
     public class MailService : IMailService
 	{

@@ -1,9 +1,9 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Queries
 {
-	using RecipeRealm.Server.GraphQL.Recipes;
-	using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.GraphQL.Recipes.Payloads;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	public class Query : IdentityQuery
+    public class Query : IdentityQuery
 	{
 		public async Task<GetUserRecipesPayload> GetUserRecipes(
 			string email,

@@ -1,9 +1,9 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Queries
 {
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	public abstract class IdentityQuery
+    public abstract class IdentityQuery
 	{
 		public async Task<bool> CheckUsernameAvailability(
 			string username,

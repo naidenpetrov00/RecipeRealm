@@ -1,17 +1,18 @@
 ﻿namespace RecipeRealm.Server.Services.Identity
 {
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.Data;
-	using RecipeRealm.Server.Data.Models.Identity;
-	using RecipeRealm.Server.Data.Exceptions.Identity;
-	using RecipeRealm.Server.Models.Identity;
+    using RecipeRealm.Server.Services.Interfaces;
+    using RecipeRealm.Server.Data;
+    using RecipeRealm.Server.Data.Models.Identity;
+    using RecipeRealm.Server.Data.Exceptions.Identity;
+    using RecipeRealm.Server.Models.Identity;
 
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.EntityFrameworkCore;
-	using AutoMapper;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using AutoMapper;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
+    using RecipeRealm.Server.GraphQL.Identity.Payloads;
 
-	public class UserService : IUserService
+    public class UserService : IUserService
 	{
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly IProfilePictureService profilePictureService;

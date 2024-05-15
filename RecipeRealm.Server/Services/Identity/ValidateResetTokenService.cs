@@ -1,12 +1,12 @@
 ﻿namespace RecipeRealm.Server.Services.Identity
 {
-	using Microsoft.AspNetCore.Identity;
-	using Org.BouncyCastle.Tls;
-	using RecipeRealm.Server.Data.Models.Identity;
-	using RecipeRealm.Server.GraphQL.Identity;
-	using RecipeRealm.Server.Services.Interfaces;
+    using Microsoft.AspNetCore.Identity;
+    using Org.BouncyCastle.Tls;
+    using RecipeRealm.Server.Data.Models.Identity;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
+    using RecipeRealm.Server.Services.Interfaces;
 
-	public class ValidateResetTokenService : IValidateResetTokenService
+    public class ValidateResetTokenService : IValidateResetTokenService
 	{
 		private readonly UserManager<RecipeRealmServerUser> userManager;
 

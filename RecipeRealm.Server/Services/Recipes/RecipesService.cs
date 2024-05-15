@@ -2,28 +2,34 @@
 {
 	using RecipeRealm.Server.Data;
 	using RecipeRealm.Server.Models.Recipes;
-	using RecipeRealm.Server.GraphQL.Recipes;
 	using RecipeRealm.Server.Services.Interfaces;
 	using RecipeRealm.Server.Services.Exceptions;
+	using RecipeRealm.Server.GraphQL.Mutations;
+	using RecipeRealm.Server.GraphQL.Recipes.Inputs;
+	using RecipeRealm.Server.GraphQL.Recipes.Payloads;
 
 	using System.Threading.Tasks;
 	using AutoMapper;
 	using AutoMapper.QueryableExtensions;
-	using NSubstitute;
-	using Microsoft.EntityFrameworkCore;
+	using Microsoft.AspNetCore.Identity;
+	using RecipeRealm.Server.Data.Models.Identity;
+	using RecipeRealm.Server.Data.Models.Recipes;
 
 	public class RecipesService : IRecipesService
 	{
 		private readonly RecipeRealmServerContext dbContext;
+		private readonly UserManager<RecipeRealmServerUser> userManager;
 		private readonly IUserService userService;
 		private readonly IMapper mapper;
 
 		public RecipesService(
 			RecipeRealmServerContext dbContext,
+			UserManager<RecipeRealmServerUser> userManager,
 			IUserService userService,
 			IMapper mapper)
 		{
 			this.dbContext = dbContext;
+			this.userManager = userManager;
 			this.userService = userService;
 			this.mapper = mapper;
 		}
@@ -59,6 +65,24 @@
 				.ToList();
 
 			return new GetUserRecipesPayload { UserRecipes = recipes };
+		}
+
+		public async Task<AddRecipePayload> AddRecipe(AddRecipeInput userInput)
+		{
+			var user = await this.userManager.FindByEmailAsync(userInput.UserEmail);
+			if (user is null)
+			{
+
+			}
+
+			var recipe = this.mapper.Map<AddRecipeInput, Recipe>(userInput);
+			recipe.UserId = user.Id;
+			await this.dbContext.Recipes.AddAsync(recipe);
+
+			return new AddRecipePayload
+			{
+				Name = "op"
+			};
 		}
 	}
 }

@@ -1,9 +1,9 @@
 ﻿namespace RecipeRealm.Server.Services.Interfaces
 {
-	using RecipeRealm.Server.Common;
-	using RecipeRealm.Server.GraphQL.Identity;
+    using RecipeRealm.Server.Common;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
 
-	public interface IValidateResetTokenService : IService
+    public interface IValidateResetTokenService : IService
 	{
 		Task<bool> CheckTokenValidity(ValidateTokenInput userInput);
 	}

@@ -1,25 +1,9 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  Fragment,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useState } from "react";
 
 import styles from "./Common/Form.module.css";
 
 const AddRecipe = () => {
   const [recipeImages, setRecipeImages] = useState<string[]>([]);
-  const [showRemovePhoto, setShowRemovePhoto] = useState<boolean>(false);
-
-  const onMouseOverHandler: MouseEventHandler<HTMLImageElement> = () => {
-    setShowRemovePhoto(true);
-  };
-
-  const onMouseLeaveHandler: MouseEventHandler<HTMLImageElement> = () => {
-    setShowRemovePhoto(false);
-  };
 
   const addImageHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -38,8 +22,10 @@ const AddRecipe = () => {
     }
   };
 
+  const formSubmithandler = () => {};
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={formSubmithandler}>
       <div className="form-group">
         <div className="form-floating mb-3">
           <input
@@ -59,18 +45,8 @@ const AddRecipe = () => {
       <div className={styles.imagesContainer}>
         {recipeImages &&
           recipeImages.map((rI, index) => (
-            <div
-              className={styles.imageContainer}
-              onMouseOver={() => setShowRemovePhoto(true)}
-              onMouseLeave={() => setShowRemovePhoto(false)}
-              key={index}
-            >
-              <img
-                src={rI}
-                className="img-thumbnail"
-                key={index}
-                onMouseOver={onMouseOverHandler}
-              />
+            <div className={styles.imageContainer} key={index}>
+              <img src={rI} className="img-thumbnail" key={index} />
               <svg
                 type="button"
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +87,7 @@ const AddRecipe = () => {
           className="form-control"
           name="email"
           id="email"
-          rows={4}
+          rows={10}
           required
         />
       </div>

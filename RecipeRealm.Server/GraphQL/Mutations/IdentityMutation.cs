@@ -1,9 +1,10 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Mutations
 {
-    using RecipeRealm.Server.GraphQL.Identity;
     using RecipeRealm.Server.Services.Interfaces;
 
     using AppAny.HotChocolate.FluentValidation;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
+    using RecipeRealm.Server.GraphQL.Identity.Payloads;
 
     public abstract class IdentityMutation
 	{

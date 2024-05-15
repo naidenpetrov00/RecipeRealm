@@ -1,18 +1,18 @@
 ﻿namespace RecipeRealm.Server.Infrastructure
 {
-	using RecipeRealm.Server.Common;
-	using RecipeRealm.Server.Data.Models.Identity;
-	using RecipeRealm.Server.Data;
-	using RecipeRealm.Server.GraphQL.Identity;
+    using RecipeRealm.Server.Common;
+    using RecipeRealm.Server.Data.Models.Identity;
+    using RecipeRealm.Server.Data;
 
-	using System.Text;
-	using System.IdentityModel.Tokens.Jwt;
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.AspNetCore.Authentication.JwtBearer;
-	using Microsoft.IdentityModel.Tokens;
-	using FluentValidation.AspNetCore;
+    using System.Text;
+    using System.IdentityModel.Tokens.Jwt;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.IdentityModel.Tokens;
+    using FluentValidation.AspNetCore;
+    using RecipeRealm.Server.GraphQL.Identity.Inputs;
 
-	public static class ServiceCollectionExtensions
+    public static class ServiceCollectionExtensions
 	{
 		public static IServiceCollection AddFluentValidationAndValidators(this IServiceCollection services)
 		{
