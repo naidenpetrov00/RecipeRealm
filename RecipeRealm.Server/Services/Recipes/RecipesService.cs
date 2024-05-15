@@ -75,9 +75,10 @@
 
 			}
 
-			var recipe = this.mapper.Map<AddRecipeInput, Recipe>(userInput);
+			var recipe = this.mapper.Map<Recipe>(userInput);
 			recipe.UserId = user.Id;
 			await this.dbContext.Recipes.AddAsync(recipe);
+			await this.dbContext.SaveChangesAsync();
 
 			return new AddRecipePayload
 			{

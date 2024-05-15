@@ -4,7 +4,6 @@
 	using RecipeRealm.Server.Data.Models.Identity;
 	using RecipeRealm.Server.Services.Identity;
 	using RecipeRealm.Server.Services.Interfaces;
-	using RecipeRealm.Server.GraphQL.Identity;
 	using RecipeRealm.Server.UnitTests.Helpers;
 
 	using NSubstitute;
@@ -13,6 +12,7 @@
 	using Microsoft.AspNetCore.Identity;
 	using AutoMapper;
 	using RecipeRealm.Server.Models.Identity;
+	using RecipeRealm.Server.GraphQL.Identity.Inputs;
 
 	public class UserServiceTests
 	{
