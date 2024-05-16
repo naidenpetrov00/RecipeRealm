@@ -40,7 +40,7 @@
 			RuleFor(r => r.CookingSteps)
 				.NotEmpty()
 				.NotNull()
-				.MaximumLength(250);
+				.MaximumLength(2000);
 
 			RuleFor(r => r.Difficulty)
 				.NotNull()

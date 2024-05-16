@@ -4,7 +4,6 @@
 	using RecipeRealm.Server.Models.Recipes;
 	using RecipeRealm.Server.Services.Interfaces;
 	using RecipeRealm.Server.Services.Exceptions;
-	using RecipeRealm.Server.GraphQL.Mutations;
 	using RecipeRealm.Server.GraphQL.Recipes.Inputs;
 	using RecipeRealm.Server.GraphQL.Recipes.Payloads;
 
@@ -54,7 +53,7 @@
 		public async Task<GetUserRecipesPayload> GetUserRecipesAsync(string email)
 		{
 			var user = await this.userService.GetUserByEmailAsync(email);
-			if (user == null)
+			if (user is null)
 			{
 				return new GetUserRecipesPayload { Error = UserNotFound.Description(email) };
 			}
@@ -69,10 +68,10 @@
 
 		public async Task<AddRecipePayload> AddRecipe(AddRecipeInput userInput)
 		{
-			var user = await this.userManager.FindByEmailAsync(userInput.UserEmail);
+			var user = await this.userService.GetUserByEmailAsync(userInput.UserEmail);
 			if (user is null)
 			{
-
+				return new AddRecipePayload { Error = UserNotFound.Description(userInput.UserEmail) };
 			}
 
 			var recipe = this.mapper.Map<Recipe>(userInput);
@@ -80,10 +79,7 @@
 			await this.dbContext.Recipes.AddAsync(recipe);
 			await this.dbContext.SaveChangesAsync();
 
-			return new AddRecipePayload
-			{
-				Name = "op"
-			};
+			return new AddRecipePayload { RecipeAdded = true };
 		}
 	}
 }

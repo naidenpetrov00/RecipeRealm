@@ -127,7 +127,7 @@
 			var user = await this.GetUserByEmailAsync(userInput.Email);
 			if (user == null)
 			{
-				return new ChangeProfilePicturePayload { ProfilePictureChanged = true, };
+				return new ChangeProfilePicturePayload { ProfilePictureChanged = false, };
 			}
 			var imageBytes = this.profilePictureService.ParseImageForDB(userInput.Base64Image);
 			user.ProfilePicture = imageBytes;

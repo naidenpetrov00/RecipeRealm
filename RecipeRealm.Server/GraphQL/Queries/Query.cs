@@ -1,6 +1,7 @@
 ﻿namespace RecipeRealm.Server.GraphQL.Queries
 {
-    using RecipeRealm.Server.GraphQL.Recipes.Payloads;
+	using AppAny.HotChocolate.FluentValidation;
+	using RecipeRealm.Server.GraphQL.Recipes.Payloads;
     using RecipeRealm.Server.Services.Interfaces;
 
     public class Query : IdentityQuery
