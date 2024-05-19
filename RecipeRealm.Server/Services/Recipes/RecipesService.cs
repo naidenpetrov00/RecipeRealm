@@ -74,12 +74,23 @@
 				return new AddRecipePayload { Error = UserNotFound.Description(userInput.UserEmail) };
 			}
 
-			var recipe = this.mapper.Map<Recipe>(userInput);
-			recipe.UserId = user.Id;
-			await this.dbContext.Recipes.AddAsync(recipe);
-			await this.dbContext.SaveChangesAsync();
+			try
+			{
 
-			return new AddRecipePayload { RecipeAdded = true };
+				var recipe = this.mapper.Map<Recipe>(userInput);
+				recipe.UserId = user.Id;
+				await this.dbContext.Recipes.AddAsync(recipe);
+				await this.dbContext.SaveChangesAsync();
+
+				return new AddRecipePayload { RecipeAdded = true };
+			}
+			catch (Exception)
+			{
+				// TODO: Log ex in DB
+
+				return new AddRecipePayload { Error = RecipeNotAdded.Description };
+			}
+
 		}
 	}
 }

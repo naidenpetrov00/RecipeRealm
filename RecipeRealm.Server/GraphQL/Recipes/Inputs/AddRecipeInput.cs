@@ -17,7 +17,7 @@
 
 		public DifficultyLevels Difficulty { get; set; }
 
-		public TimeSpan CookingTime { get; set; }
+		public string CookingTime { get; set; }
 	}
 
 	public class AddRecipeInputValidator : AbstractValidator<AddRecipeInput>
@@ -49,9 +49,9 @@
 
 			RuleFor(r => r.CookingTime)
 				.NotEmpty()
-				.NotNull()
-				.Must(BeValidTimeSpan).WithMessage("Invalid TimeSpan.")
-				.Must(BeWithinRange).WithMessage("TimeSpan is not within the allowed range.");
+				.NotNull();
+			//.Must(BeValidTimeSpan).WithMessage("Invalid TimeSpan.")
+			//.Must(BeWithinRange).WithMessage("TimeSpan is not within the allowed range.");
 		}
 		private bool BeValidTimeSpan(TimeSpan timeSpan)
 		{
@@ -69,7 +69,8 @@
 	{
 		public Mapping()
 		{
-			CreateMap<AddRecipeInput, Recipe>();
+			CreateMap<AddRecipeInput, Recipe>()
+				.ForMember(dest => dest.CookingTime, opt => opt.MapFrom(src => TimeSpan.Parse(src.CookingTime)));
 
 		}
 	}
