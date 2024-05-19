@@ -1,0 +1,6 @@
+mutation AddRecipe($userInput: AddRecipeInput!) {
+  addRecipe(userInput: $userInput) {
+    recipeAdded
+    error
+  }
+}

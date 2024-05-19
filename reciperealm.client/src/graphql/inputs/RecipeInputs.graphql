@@ -1,0 +1,8 @@
+type AddRecipeInput {
+  name: String!
+  userEmail: String!
+  recipeImages: [String!]!
+  cookingSteps: String!
+  difficulty: DifficultyLevels!
+  cookingTime: String!
+}
