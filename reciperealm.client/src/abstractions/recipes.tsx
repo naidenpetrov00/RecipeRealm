@@ -28,3 +28,24 @@ export interface UserRecipesCountAndStatsQueryReturn {
   downVotes: number;
   savesCount: number;
 }
+
+export interface IAddRecipesFormValues {
+  recipeName: string;
+  recipeImages: string[];
+  cookingSteps: string;
+  difficulty: string;
+  cookingTime: string;
+}
+
+export enum InvalidInputErrorMessges {
+  InvalidEmail = "Provide valid email!",
+  EmptyInput = "This is required!",
+  MinLengthName = "Min length 5!",
+  MaxLengthName = "Max length 100!",
+  MinLengthSteps = "Min length 10!",
+  MaxLengthSteps = "Max length 2000!",
+  UsernameIsNotAvailable = "Username is not available!",
+  AccountWithThisEmailAlreadyExists = "Account with this Email already exists!",
+  PassportReqUppercaseAndNumber = "Passport must contain at least one uppercase letter and one number!",
+  PasswordsMustMatch = "Passwords must match!",
+}

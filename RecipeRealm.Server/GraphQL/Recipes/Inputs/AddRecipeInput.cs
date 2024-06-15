@@ -27,6 +27,7 @@
 			RuleFor(r => r.Name)
 				.NotEmpty()
 				.NotNull()
+				.MinimumLength(5)
 				.MaximumLength(100);
 
 			RuleFor(r => r.UserEmail)
@@ -40,6 +41,7 @@
 			RuleFor(r => r.CookingSteps)
 				.NotEmpty()
 				.NotNull()
+				.MinimumLength(100)
 				.MaximumLength(2000);
 
 			RuleFor(r => r.Difficulty)

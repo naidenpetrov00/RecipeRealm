@@ -64,7 +64,7 @@ const LoginPage = () => {
           id="form2Example2"
           className="form-control"
           {...register("password", {
-            required: "This is required",
+            required: InvalidInputErrorMessges.EmptyInput,
             minLength: {
               value: 8,
               message: InvalidInputErrorMessges.MinLength8,
