@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react";
 
+import "./TuncatedText.css";
+
 interface TruncatedTextProps {
   text: string;
   maxLength: number;
@@ -12,7 +14,7 @@ const TruncatedText: FC<TruncatedTextProps> = ({ text, maxLength }) => {
   };
 
   return (
-    <div>
+    <div className="description-container">
       {showFullText ? (
         <p>{text}</p>
       ) : (

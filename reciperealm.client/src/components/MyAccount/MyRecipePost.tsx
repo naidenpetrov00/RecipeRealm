@@ -27,8 +27,6 @@ const MyRecipePost: FC<MyRecipePostProps> = ({ recipeInfo }) => {
                 text={recipeInfo.cookingSteps}
                 maxLength={200}
               ></TruncatedText>
-
-              
             </div>
           </div>
           <div className="row post-detail">

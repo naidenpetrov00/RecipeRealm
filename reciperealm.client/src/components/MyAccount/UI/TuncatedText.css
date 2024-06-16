@@ -1,0 +1,19 @@
+.description-container {
+  width: 100%; /* Adjust as necessary */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  padding: 10px; /* Optional: Add some padding */
+  box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.description-container p {
+  margin: 0; /* Reset margin if necessary */
+  white-space: normal; /* Allow text to wrap when not truncated */
+  overflow: hidden; /* Ensure content is clipped */
+  text-overflow: ellipsis; /* Add ellipsis at the end of overflowed text */
+}
+
+.description-container .btn {
+  margin-top: 10px; /* Optional: Add space above the button */
+}

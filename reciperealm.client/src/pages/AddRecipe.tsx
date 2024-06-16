@@ -1,11 +1,23 @@
-import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  MouseEventHandler,
+  useRef,
+  useState,
+} from "react";
 
 import styles from "./Common/Form.module.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
+  IAddRecipeInputData,
   IAddRecipesFormValues,
   InvalidInputErrorMessges,
 } from "../abstractions/recipes";
+import ReCAPTCHA from "react-google-recaptcha";
+import ReCaptcha from "../components/ReCaptcha";
+import { useAddRecipe } from "../customHooks/recipes/useAddRecipe";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { IUserLoginValues } from "../abstractions/identity";
 
 const AddRecipe = () => {
   const [recipeImages, setRecipeImages] = useState<string[]>([]);
@@ -34,7 +46,7 @@ const AddRecipe = () => {
       }
     }
   };
-  //event: React.MouseEvent<SVGSVGElement>
+
   const removeImageHandler = (index: number) => {
     const images =
       recipeImages.length === 1
@@ -43,26 +55,30 @@ const AddRecipe = () => {
     setRecipeImages(images);
   };
 
-  const formSubmithandler: SubmitHandler<IAddRecipesFormValues> = (
+  const userData = useAuthUser<IUserLoginValues>();
+  const reCaptchaRef = useRef<ReCAPTCHA>(null);
+  const { addRecipe } = useAddRecipe();
+  const formSubmithandler: SubmitHandler<IAddRecipesFormValues> = async (
     data: IAddRecipesFormValues
   ) => {
+    reCaptchaRef.current?.execute();
     data.recipeImages = recipeImages;
-    console.log(data);
+    const input: IAddRecipeInputData = { userEmail: userData?.email!, ...data };
+
+    await addRecipe(input);
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(formSubmithandler)}>
       <div className="form-group">
-        {errors.recipeName && (
-          <p className="text-danger">{errors.recipeName.message}</p>
-        )}
+        {errors.name && <p className="text-danger">{errors.name.message}</p>}
         <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
-            id="recipeName"
+            id="name"
             placeholder=" Recipe Name"
-            {...register("recipeName", {
+            {...register("name", {
               required: InvalidInputErrorMessges.EmptyInput,
               minLength: {
                 value: 5,
@@ -74,7 +90,7 @@ const AddRecipe = () => {
               },
             })}
           />
-          <label htmlFor="recipeName" className="form-label">
+          <label htmlFor="name" className="form-label">
             Recipe Name
           </label>
         </div>
@@ -151,9 +167,9 @@ const AddRecipe = () => {
           <label htmlFor="difficulty">Difficulty</label>
           <select
             id="difficulty"
-            name="difficulty"
             defaultValue="EAZY"
             className="form-control"
+            {...register("difficulty")}
           >
             <option>EAZY</option>
             <option>MEDIUM</option>
@@ -165,6 +181,7 @@ const AddRecipe = () => {
           <div className="cs-form">
             <input
               type="time"
+              defaultValue="00:00"
               id="cookingTime"
               className="form-control"
               {...register("cookingTime", {
@@ -174,6 +191,7 @@ const AddRecipe = () => {
           </div>
         </div>
       </div>
+      <ReCaptcha reCaptchaRef={reCaptchaRef} />
       <button type="submit" className="btn btn-primary">
         Add Recipe
       </button>

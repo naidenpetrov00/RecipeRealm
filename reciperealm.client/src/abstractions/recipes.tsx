@@ -30,11 +30,14 @@ export interface UserRecipesCountAndStatsQueryReturn {
 }
 
 export interface IAddRecipesFormValues {
-  recipeName: string;
+  name: string;
   recipeImages: string[];
   cookingSteps: string;
-  difficulty: string;
+  difficulty: DifficultyLevels;
   cookingTime: string;
+}
+export interface IAddRecipeInputData extends IAddRecipesFormValues {
+  userEmail: string;
 }
 
 export enum InvalidInputErrorMessges {

@@ -21,7 +21,14 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "addrecipe", element: <AddRecipe /> },
+      {
+        path: "addrecipe",
+        element: (
+          <RequireAuth fallbackPath="/login">
+            <AddRecipe />
+          </RequireAuth>
+        ),
+      },
       {
         path: "myaccount",
         element: (
